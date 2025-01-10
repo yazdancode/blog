@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Create A New Blog Post!{%endblock%}
+{% block title %}Create a New Blog Post{% endblock %}
 {% block content %}
 
-<h1>Add Post...</h1>
-<form method="POST" action="" class="form-group">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-secondary">Post</button>
-</form>
+<h1>Add Post</h1>
+<div class="form-label">
+    <form method="POST" action="" class="form-group">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary">Post</button>
+    </form>
+</div>
 
 {% endblock %}

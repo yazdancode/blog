@@ -25,4 +25,4 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         # return reverse("article-detail", args=(self.id), kwargs={"pk": self.pk})
-        return reverse('home')
+        return reverse("home")
