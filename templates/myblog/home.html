@@ -1,12 +1,29 @@
-<h1>Post</h1>
+{% extends 'base.html' %}
+{% block content %}
 
-<ul>
-{% for post in object_list %}
-    <li>
-        <a href="{% url 'article-detail' post.pk %}">
-            {{ post.title }}
-        </a> - {{ post.author.first_name }} {{ post.author.last_name }} - {{ post.author.email }}<br/>
-        {{ post.body }}
-    </li>
-{% endfor %}
-</ul>
+<h1>Posts</h1>
+
+{% if object_list %}
+    <ul>
+        {% for post in object_list %}
+            <li class="post-item">
+                <h2>
+                    <a href="{% url 'article-detail' post.pk %}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                <p class="post-author">
+                    By {{ post.author.first_name }} {{ post.author.last_name }} - 
+                    <a href="mailto:{{ post.author.email }}">{{ post.author.email }}</a>
+                </p>
+                <div class="post-body">
+                    {{ post.body|safe }}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No posts available.</p>
+{% endif %}
+
+{% endblock %}

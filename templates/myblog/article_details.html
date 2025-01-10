@@ -1,9 +1,25 @@
-<h1>{{ post.title }}</h1>
-<small>By: {{ post.author.first_name }} {{ post.author.last_name }}</small><br>
-<hr>
-<p>
-    {{ post.body }}
-</p>
+{% extends 'base.html' %}
+{% block title %}This is a blog post...{%endblock%}
+{% block content %}
 
-<br/><br/>
-<a href="{% url 'home' %}">Back</a>
+<article class="post-detail">
+    <header>
+        <h1>{{ post.title }}</h1>
+        <small class="post-meta">
+            By: {{ post.author.first_name }} {{ post.author.last_name }}<br>
+            <time datetime="{{ post.created_at }}">{{ post.created_at|date:"F j, Y, g:i a" }}</time>
+        </small>
+        <hr>
+    </header>
+
+    <section class="post-body">
+        <p>{{ post.body|safe }}</p>
+    </section>
+
+    <footer>
+        <br><br>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    </footer>
+</article>
+
+{% endblock %}
