@@ -6,6 +6,7 @@ from django.utils.timezone import now
 
 class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Post Title")
+    title_tag = models.CharField(max_length=255, verbose_name="Post Title Tag")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
     body = models.TextField(verbose_name="Post Content")
     created_at = models.DateTimeField(default=now)  # Fixed indentation
