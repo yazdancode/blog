@@ -8,7 +8,6 @@ class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Post Title")
     title_tag = models.CharField(
         max_length=255,
-        default="My Freakin' Awesome Blog",
         verbose_name="Post Title Tag",
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
@@ -25,4 +24,5 @@ class Post(models.Model):
         return f"{self.title} | {self.author}"
 
     def get_absolute_url(self):
-        return reverse("article-detail", kwargs={"pk": self.pk})
+        # return reverse("article-detail", args=(self.id), kwargs={"pk": self.pk})
+        return reverse('home')
