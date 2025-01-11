@@ -18,9 +18,9 @@ class PostForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "style": "color: #303b51; font-size: 16px; font-weight: 600;",
-                    "placeholder": "Enter the title_tag here"
-
-                }),
+                    "placeholder": "Enter the title_tag here",
+                }
+            ),
             "author": forms.Select(attrs={"class": "form-control"}),
             "body": forms.Textarea(attrs={"class": "form-control"}),
         }
