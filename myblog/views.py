@@ -6,7 +6,6 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-
 from .forms import PostForm, UpdateForm
 from .models import Post
 
