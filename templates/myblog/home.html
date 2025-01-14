@@ -18,7 +18,8 @@
                     </header>
                     <p class="post-author text-muted">
                         نوشته شده توسط {{ post.author.first_name }} {{ post.author.last_name }}
-                        - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small>
+                        - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
+                        <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(delete)</a></small>
                         - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
                     </p>
                     <div class="post-body">
