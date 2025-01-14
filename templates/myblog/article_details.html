@@ -8,8 +8,10 @@
         <small class="post-meta text-muted d-block mb-2">
             نوشته شده توسط: {{ post.author.first_name }} {{ post.author.last_name }} {{ post.post_date }}
             <small>
+                {% if user.is_authenticated %}
                 <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
-                <a href="{% url 'delete_post' post.pk %}" class="text-primary">(Delete)</a>
+                <a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a>
+                {% endif %}
             </small>
             <br>
             <time datetime="{{ post.created_at }}">{{ post.created_at|date:"j F Y, g:i a" }}</time>

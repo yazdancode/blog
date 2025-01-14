@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block title %}لیست پست‌ها{% endblock %}
 
 {% block content %}
@@ -18,10 +19,12 @@
                     </header>
                     <p class="post-author text-muted">
                         نوشته شده توسط {{ post.author.first_name }}
-                                        {{ post.author.last_name }}
-                                        {{ post.post_date }}
-                        - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
-                        <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(delete)</a></small>
+                        {{ post.author.last_name }}
+                        {{ post.post_date }}
+                        {% if user.is_authenticated %}
+                            - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
+                            <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a></small>
+                        {% endif %}
                         - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
                     </p>
                     <div class="post-body">
