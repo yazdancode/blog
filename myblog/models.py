@@ -12,7 +12,8 @@ class Post(models.Model):
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
     body = models.TextField(verbose_name="Post Content")
-    created_at = models.DateTimeField(default=now)  # Fixed indentation
+    post_date = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Last Updated")
 
     class Meta:
@@ -23,6 +24,6 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.title} | {self.author}"
 
-    def get_absolute_url(self):
-        # return reverse("article-detail", args=(self.id), kwargs={"pk": self.pk})
+    @staticmethod
+    def get_absolute_url():
         return reverse("home")

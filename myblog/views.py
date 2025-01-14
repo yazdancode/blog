@@ -6,13 +6,15 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from .models import Post
+
 from .forms import PostForm, UpdateForm
+from .models import Post
 
 
 class HomeView(ListView):
     model = Post
     template_name = "myblog/home.html"
+    ordering = ["-post_date"]
 
 
 class ArticleDetailView(DetailView):
