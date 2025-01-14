@@ -1,29 +1,53 @@
 {% extends 'base.html' %}
-{% block content %}
+{% block title %}لیست پست‌ها{% endblock %}
 
-<h1>Posts</h1>
+{% block content %}
+<h1 class="text-center my-4">لیست پست‌ها</h1>
 
 {% if object_list %}
-    <ul>
+    <ul class="list-group mb-4">
         {% for post in object_list %}
-            <li class="post-item">
-                <h2>
-                    <a href="{% url 'article-detail' post.pk %}">
-                        {{ post.title }}
-                    </a>
-                </h2>
-                <p class="post-author">
-                    By {{ post.author.first_name }} {{ post.author.last_name }} - 
-                    <a href="mailto:{{ post.author.email }}">{{ post.author.email }}</a>
-                </p>
-                <div class="post-body">
-                    {{ post.body|safe }}
-                </div>
+            <li class="list-group-item">
+                <article class="post-item">
+                    <header>
+                        <h2>
+                            <a href="{% url 'article-detail' post.pk %}" class="text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                    </header>
+                    <p class="post-author text-muted">
+                        نوشته شده توسط {{ post.author.first_name }} {{ post.author.last_name }}
+                        - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small>
+                        - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
+                    </p>
+                    <div class="post-body">
+                        {{ post.body|safe }}
+                    </div>
+                </article>
             </li>
         {% endfor %}
     </ul>
-{% else %}
-    <p>No posts available.</p>
-{% endif %}
 
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">صفحه قبل</a>
+            {% else %}
+                <span class="btn btn-outline-secondary disabled">صفحه قبل</span>
+            {% endif %}
+
+            <span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">صفحه بعد</a>
+            {% else %}
+                <span class="btn btn-outline-secondary disabled">صفحه بعد</span>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% else %}
+    <p>هیچ پستی موجود نیست. <a href="{% url 'create_post' %}" class="btn btn-primary">ایجاد پست جدید</a></p>
+{% endif %}
 {% endblock %}

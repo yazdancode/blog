@@ -92,3 +92,29 @@ class PostForm(forms.ModelForm):
         if publish_date > date.today():
             raise forms.ValidationError("تاریخ انتشار نمی‌تواند در آینده باشد.")
         return publish_date
+
+
+class UpdateForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ("title", "title_tag", "body")  # Correct tuple format
+        widgets = {
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "عنوان را اینجا وارد کنید",
+                }
+            ),
+            "title_tag": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "برچسب عنوان را اینجا وارد کنید",
+                }
+            ),
+            "body": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "متن پست را اینجا وارد کنید",
+                }
+            ),
+        }

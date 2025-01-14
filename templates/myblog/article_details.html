@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
-{% block title %}{{post.title_tag}}{%endblock%}
-{% block content %}
+{% block title %}{{ post.title_tag }}{% endblock %}
 
+{% block content %}
 <article class="post-detail">
-    <header>
-        <h1>{{ post.title }}</h1>
-        <small class="post-meta">
-            By: {{ post.author.first_name }} {{ post.author.last_name }}<br>
-            <time datetime="{{ post.created_at }}">{{ post.created_at|date:"F j, Y, g:i a" }}</time>
+    <header class="mb-4">
+        <h1 class="display-4">{{ post.title }}</h1>
+        <small class="post-meta text-muted d-block mb-2">
+            نوشته شده توسط: {{ post.author.first_name }} {{ post.author.last_name }}
+            <small>
+                <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
+            </small>
+            <br>
+            <time datetime="{{ post.created_at }}">{{ post.created_at|date:"j F Y, g:i a" }}</time>
         </small>
         <hr>
     </header>
 
-    <section class="post-body">
-        <p>{{ post.body|safe }}</p>
+    <section class="post-body mb-4">
+        <p class="lead">{{ post.body|safe }}</p>
     </section>
 
     <footer>
-        <br><br>
-        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">بازگشت به خانه</a>
     </footer>
 </article>
-
 {% endblock %}
