@@ -3,17 +3,18 @@ from .models import Profile
 
 
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.get("request", None)  # دریافت request اگر موجود باشد
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Profile
-        fields = ("user", "first_name", "last_name", "password")
+        fields = ("user", "password")
         widgets = {
+            "user": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter your username"}
+            ),
             "password": forms.PasswordInput(
                 attrs={"class": "form-control", "placeholder": "Enter your password"}
-            ),
-            "first_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "First Name"}
-            ),
-            "last_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Last Name"}
             ),
         }
