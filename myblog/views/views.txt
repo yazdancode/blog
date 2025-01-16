@@ -1,2 +1,6 @@
 def home(request):
     return render(request, 'myblog/home.html', {})
+
+
+def category(request, category):
+    return render(request, 'myblog/category.html', {})

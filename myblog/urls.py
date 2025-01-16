@@ -7,6 +7,7 @@ from myblog.views import (
     UpdatePostView,
     DeletePostView,
     AddCategoryView,
+    CategoryView,
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path("article/edite/<int:pk>", UpdatePostView.as_view(), name="update_post"),
     path("article/<int:pk>/delete", DeletePostView.as_view(), name="delete_post"),
     path("add_category/", AddCategoryView.as_view(), name="add_category"),
+    path("category/<str:category_name>/", CategoryView.as_view(), name="category_view"),
 ]
