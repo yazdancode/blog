@@ -63,10 +63,10 @@ class CategoryView(View):
     template_name = "myblog/category.html"
 
     def get(self, request, category_name):
-        # بازیابی دسته‌بندی با استفاده از نام یا برگرداندن 404 اگر پیدا نشد
+        category_name = category_name.replace("-", "")
         category = get_object_or_404(Category, name=category_name)
-        # فیلتر کردن پست‌ها با توجه به دسته‌بندی
         posts = Post.objects.filter(category=category)
+
         return render(
             request, self.template_name, {"category": category, "posts": posts}
         )
