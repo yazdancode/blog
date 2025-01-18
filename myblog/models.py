@@ -2,17 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import now
+from django.utils.text import slugify
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, blank=True, default="default-slug")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
-
-    @staticmethod
-    def get_absolute_url():
-        return reverse("home")
 
 
 class Post(models.Model):

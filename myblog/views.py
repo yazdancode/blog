@@ -26,14 +26,21 @@ class HomeView(BaseView, ListView):
     ordering = ["-post_date"]
     context_object_name = "posts"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = super().get_context_data(**kwargs)
+        context = super(HomeView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
         return context
 
 
 class ArticleDetailView(BaseView, DetailView):
     template_name = "myblog/article_details.html"
+
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = super().get_context_data(**kwargs)
+        context = super(ArticleDetailView, self).get_context_data(**kwargs)
+        context["cat_menu"] = cat_menu
+        return context
 
 
 class AddPostView(BaseView, BaseForm, CreateView):
@@ -63,10 +70,18 @@ class CategoryView(View):
     template_name = "myblog/category.html"
 
     def get(self, request, category_name):
-        category_name = category_name.replace("-", "")
-        category = get_object_or_404(Category, name=category_name)
+        category = get_object_or_404(Category, slug=category_name)
         posts = Post.objects.filter(category=category)
 
         return render(
             request, self.template_name, {"category": category, "posts": posts}
         )
+
+
+class CategoryListView(View):
+    template_name = "myblog/category_list.html"
+
+    def get(self, request):
+        # گرفتن تمام دسته‌بندی‌ها
+        cat_menu_list = Category.objects.all()
+        return render(request, self.template_name, {"cat_menu_list": cat_menu_list})

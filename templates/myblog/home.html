@@ -3,58 +3,72 @@
 {% block title %}لیست پست‌ها{% endblock %}
 
 {% block content %}
-<h1 class="text-center my-4">لیست پست‌ها</h1>
+<div class="container my-5">
+    <h1 class="text-center my-4">لیست پست‌ها</h1>
 
-{% if object_list %}
-    <ul class="list-group mb-4">
-        {% for post in object_list %}
-            <li class="list-group-item">
-                <article class="post-item">
-                    <header>
-                        <h2>
-                            <a href="{% url 'article-detail' post.pk %}" class="text-decoration-none">
-                                {{ post.title }}
+    {% if object_list %}
+        <ul class="list-group mb-4">
+            {% for post in object_list %}
+                <li class="list-group-item">
+                    <article class="post-item">
+                        <header>
+                            <h2>
+                                <a href="{% url 'article-detail' post.pk %}" class="text-decoration-none">
+                                    {{ post.title }}
+                                </a>
+                            </h2>
+                        </header>
+
+                        <p class="post-author text-muted">
+                            <a href="{% url 'category_view' post.category %}" class="text-primary">
+                                {{ post.category|slugify }}
                             </a>
-                        </h2>
-                    </header>
-                    <p class="post-author text-muted">
-                    <a href="{% url 'category_view' post.category%}">{{ post.category|slugify }}</a>
-                        نوشته شده توسط {{ post.author.first_name }}
-                        {{ post.author.last_name }}
-                        {{ post.post_date }}
-                        {% if user.is_authenticated %}
-                            - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
-                            <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a></small>
-                        {% endif %}
-                        - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
-                    </p>
-                    <div class="post-body">
-                        {{ post.body|safe }}
-                    </div>
-                </article>
-            </li>
-        {% endfor %}
-    </ul>
+                            نوشته شده توسط {{ post.author.first_name }} {{ post.author.last_name }}
+                            در {{ post.post_date|date:"j F Y" }}
+                        </p>
 
-    <!-- Pagination -->
-    {% if is_paginated %}
-        <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">صفحه قبل</a>
-            {% else %}
-                <span class="btn btn-outline-secondary disabled">صفحه قبل</span>
-            {% endif %}
+                        <div class="post-body">
+                            {{ post.body|safe }}
+                        </div>
 
-            <span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
+                        <div class="post-actions mt-3">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'update_post' post.pk %}" class="btn btn-sm btn-outline-warning">ویرایش</a>
+                                <a href="{% url 'delete_post' post.pk %}" class="btn btn-sm btn-outline-danger">حذف</a>
+                            {% endif %}
+                            <a href="mailto:{{ post.author.email }}" class="btn btn-sm btn-outline-secondary">
+                                ایمیل: {{ post.author.email }}
+                            </a>
+                        </div>
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">صفحه بعد</a>
-            {% else %}
-                <span class="btn btn-outline-secondary disabled">صفحه بعد</span>
-            {% endif %}
-        </nav>
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">صفحه قبل</a>
+                {% else %}
+                    <span class="btn btn-outline-secondary disabled">صفحه قبل</span>
+                {% endif %}
+
+                <span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">صفحه بعد</a>
+                {% else %}
+                    <span class="btn btn-outline-secondary disabled">صفحه بعد</span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-warning text-center">
+            <p>هیچ پستی موجود نیست.</p>
+            <a href="{% url 'add_post' %}" class="btn btn-primary">ایجاد پست جدید</a>
+        </div>
     {% endif %}
-{% else %}
-    <p>هیچ پستی موجود نیست. <a href="{% url 'add_post' %}" class="btn btn-primary">ایجاد پست جدید</a></p>
-{% endif %}
+</div>
+
 {% endblock %}
