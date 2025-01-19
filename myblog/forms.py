@@ -6,6 +6,7 @@ from .models import Post, Category
 # کلید حافظه پنهان برای دسته‌بندی‌ها
 CATEGORIES_CACHE_KEY = "categories"
 
+
 # تابع کمکی برای تنظیم استایل ویجت‌ها
 def form_widget_attrs(base_attrs=None, **styles):
     """
@@ -16,6 +17,7 @@ def form_widget_attrs(base_attrs=None, **styles):
     style_string = "; ".join(f"{k}: {v}" for k, v in styles.items())
     base_attrs["style"] = style_string
     return base_attrs
+
 
 # توابع کمکی برای اعتبارسنجی متن فارسی
 def validate_persian_text(text, field_name, min_length=None, max_length=None):
@@ -34,6 +36,7 @@ def validate_persian_text(text, field_name, min_length=None, max_length=None):
         raise forms.ValidationError(f"{field_name} باید فقط شامل حروف فارسی باشد.")
     return text
 
+
 def validate_no_special_chars(text, field_name):
     """
     بررسی می‌کند که متن شامل کاراکترهای خاص نباشد.
@@ -41,6 +44,7 @@ def validate_no_special_chars(text, field_name):
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", text):
         raise forms.ValidationError(f"{field_name} نباید شامل کاراکترهای خاص باشد.")
     return text
+
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -60,7 +64,13 @@ class PostForm(forms.ModelForm):
             ),
             "title_tag": forms.TextInput(
                 attrs=form_widget_attrs(
-                    {"class": "form-control", "placeholder": "برچسب عنوان را اینجا وارد کنید", 'id':'elder'},
+                    {
+                        "class": "form-control",
+                        "placeholder": "برچسب عنوان را اینجا وارد کنید",
+                        "value": "",
+                        "id": "elder",
+                        "type": "hidden",
+                    },
                     color="#303b51",
                     font_size="16px",
                     font_weight="600",
@@ -68,7 +78,10 @@ class PostForm(forms.ModelForm):
             ),
             "author": forms.TextInput(
                 attrs=form_widget_attrs(
-                    {"class": "form-control", "placeholder": "نویسنده را اینجا وارد کنید"},
+                    {
+                        "class": "form-control",
+                        "placeholder": "نویسنده را اینجا وارد کنید",
+                    },
                     color="#303b51",
                     font_size="16px",
                     font_weight="600",
@@ -77,7 +90,10 @@ class PostForm(forms.ModelForm):
             "category": forms.Select(attrs={"class": "form-control"}),
             "body": forms.Textarea(
                 attrs=form_widget_attrs(
-                    {"class": "form-control", "placeholder": "متن پست را اینجا وارد کنید"},
+                    {
+                        "class": "form-control",
+                        "placeholder": "متن پست را اینجا وارد کنید",
+                    },
                     color="#1a202c",
                     font_size="14px",
                     font_weight="400",
@@ -127,6 +143,7 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError("متن پست نمی‌تواند فقط شامل فاصله باشد.")
         return body
 
+
 class UpdateForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -134,7 +151,10 @@ class UpdateForm(forms.ModelForm):
         widgets = {
             "title": forms.TextInput(
                 attrs=form_widget_attrs(
-                    {"class": "form-control", "placeholder": "عنوان را اینجا وارد کنید"},
+                    {
+                        "class": "form-control",
+                        "placeholder": "عنوان را اینجا وارد کنید",
+                    },
                     color="#1a202c",
                     font_size="16px",
                     font_weight="600",
@@ -142,14 +162,20 @@ class UpdateForm(forms.ModelForm):
             ),
             "title_tag": forms.TextInput(
                 attrs=form_widget_attrs(
-                    {"class": "form-control", "placeholder": "برچسب عنوان را اینجا وارد کنید"},
+                    {
+                        "class": "form-control",
+                        "placeholder": "برچسب عنوان را اینجا وارد کنید",
+                    },
                     color="#303b51",
                     font_size="14px",
                 )
             ),
             "body": forms.Textarea(
                 attrs=form_widget_attrs(
-                    {"class": "form-control", "placeholder": "متن پست را اینجا وارد کنید"},
+                    {
+                        "class": "form-control",
+                        "placeholder": "متن پست را اینجا وارد کنید",
+                    },
                     line_height="1.5",
                 )
             ),
