@@ -3,25 +3,7 @@
 {% block title %}Edit Blog Post{% endblock %}
 
 {% block styles %}
-<style>
-    .form-label {
-        margin-top: 20px;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        color: white;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'myblog/css/update-post.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -44,14 +26,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    // Add a confirmation before submitting the form
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function (e) {
-        const isConfirmed = confirm("Are you sure you want to update the post?");
-        if (!isConfirmed) {
-            e.preventDefault();  // Prevent form submission if not confirmed
-        }
-    });
-</script>
+<script src="{% static 'myblog/js/update-post.js' %}"></script>
 {% endblock %}
