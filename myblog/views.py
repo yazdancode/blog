@@ -129,12 +129,14 @@ class DislikeView(LoginRequiredMixin, View):
 
 
 class ShareView(View):
-    def get(self, request, pk):
+    @staticmethod
+    def get(request, pk):
         post = get_object_or_404(Post, pk=pk)
         form = ShareForm()
         return render(request, "myblog/share_post.html", {"form": form, "post": post})
 
-    def post(self, request, pk):
+    @staticmethod
+    def post(request, pk):
         post = get_object_or_404(Post, pk=pk)
         form = ShareForm(request.POST)
         if form.is_valid():
