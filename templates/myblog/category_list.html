@@ -1,14 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Blog Categories{% endblock %}
 
 {% block content %}
-  <h1>Blog Categories</h1>
-  <ul class="list-group">
-    {% for item in cat_menu_list %}
-      <li class="list-group-item">
-        <a href="{% url 'category_view' item.slug %}">{{ item.name }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+    <link rel="stylesheet" href="{% static 'myblog/css/categories-list.css' %}">
+
+    <div class="categories-container">
+        <h1>Blog Categories</h1>
+        {% if cat_menu_list %}
+            <ul class="list-group">
+                {% for item in cat_menu_list %}
+                    <li class="list-group-item">
+                        <a href="{% url 'category_view' item.slug %}">{{ item.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <p>No categories available yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'myblog/js/categories-list.js' %}"></script>
 {% endblock %}

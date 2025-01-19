@@ -1,44 +1,57 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}دسته بندی ها{% endblock %}
 
 {% block content %}
-    {% if category %}
-        <h1 class="text-center my-4">{{ category.name }} دسته بندی</h1>
+    <link rel="stylesheet" href="{% static 'myblog/css/category-view.css' %}">
 
-        {% if posts %}
-            <ul>
-                {% for post in posts %}
-                    <li class="list-group-item">
-                        <article class="post-item">
-                            <header>
-                                <h2>
-                                    <a href="{% url 'article-detail' post.pk %}" class="text-decoration-none">
-                                        {{ post.title }}
-                                    </a>
-                                </h2>
-                            </header>
-                            <p class="post-author text-muted">
-                                نوشته شده توسط {{ post.author.first_name }} {{ post.author.last_name }}
-                                {{ post.post_date }}
-                                {% if user.is_authenticated %}
-                                    - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
-                                    <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a></small>
-                                {% endif %}
-                                - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
-                            </p>
-                            <div class="post-body">
-                                {{ post.body|safe }}
-                            </div>
-                        </article>
-                    </li>
-                {% endfor %}
-            </ul>
+    <div class="category-container">
+        {% if category %}
+            <div class="category-header">
+                <h1>{{ category.name }} دسته بندی</h1>
+            </div>
+
+            {% if posts %}
+                <ul>
+                    {% for post in posts %}
+                        <li class="list-group-item">
+                            <article class="post-item">
+                                <header>
+                                    <h2>
+                                        <a href="{% url 'article-detail' post.pk %}">
+                                            {{ post.title }}
+                                        </a>
+                                    </h2>
+                                </header>
+                                <p class="post-author">
+                                    نوشته شده توسط {{ post.author.first_name }} {{ post.author.last_name }}
+                                    {{ post.post_date }}
+                                    {% if user.is_authenticated %}
+                                        - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
+                                        <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a></small>
+                                    {% endif %}
+                                    - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
+                                </p>
+                                <div class="post-body">
+                                    {{ post.body|safe }}
+                                </div>
+                            </article>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-state">
+                    <p>هیچ پستی در این دسته‌بندی موجود نیست.</p>
+                </div>
+            {% endif %}
         {% else %}
-            <p>هیچ پستی در این دسته‌بندی موجود نیست.</p>
+            <div class="empty-state">
+                <h1>دسته‌بندی پیدا نشد.</h1>
+                <p>ممکن است این دسته‌بندی حذف شده یا نامعتبر باشد.</p>
+            </div>
         {% endif %}
-    {% else %}
-        <h1>دسته‌بندی پیدا نشد.</h1>
-        <p>ممکن است این دسته‌بندی حذف شده یا نامعتبر باشد.</p>
-    {% endif %}
+    </div>
+
+    <script src="{% static 'myblog/js/category-view.js' %}"></script>
 {% endblock %}

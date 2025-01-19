@@ -1,21 +1,26 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Delete Blog Post{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h1>Delete Post</h1>
-        <br/><br/>
-        <h3>Delete: {{ post.title }}</h3>
-        <br/>
-        <div class="form-label">
-            <form method="POST" action="" class="form-group">
-                {% csrf_token %}
-                <strong>Are you sure?</strong><br/>
-                <button type="submit" class="btn btn-secondary">Delete</button>
-            </form>
-        </div>
-    {% else %}
-        <p>You are not authorized to delete posts.</p>
-    {% endif %}
+    <link rel="stylesheet" href="{% static 'myblog/css/delete-post.css' %}">
+
+    <div class="delete-container">
+        {% if user.is_authenticated %}
+            <h1>Delete Post</h1>
+            <h3>Delete: {{ post.title }}</h3>
+            <div class="form-label">
+                <form method="POST" action="" class="form-group">
+                    {% csrf_token %}
+                    <strong>Are you sure?</strong>
+                    <button type="submit" class="btn btn-secondary">Delete</button>
+                </form>
+            </div>
+        {% else %}
+            <p class="unauthorized-message">You are not authorized to delete posts.</p>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'myblog/js/delete-post.js' %}"></script>
 {% endblock %}

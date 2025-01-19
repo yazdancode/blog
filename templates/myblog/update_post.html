@@ -2,21 +2,56 @@
 
 {% block title %}Edit Blog Post{% endblock %}
 
+{% block styles %}
+<style>
+    .form-label {
+        margin-top: 20px;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
     {% if user.is_authenticated %}
-        {% if user.id == post.author..id%}   
+        {% if user.id == post.author.id %}
             <h1>Update Post</h1>
             <div class="form-label">
                 <form method="POST" action="" class="form-group">
                     {% csrf_token %}
                     {{ form.as_p }}
-                <button type="submit" class="btn btn-secondary">Update</button>
+                    <button type="submit" class="btn btn-secondary">Update</button>
                 </form>
             </div>
-            {% else %}
-            You are not allowed here! (and you know it...)
-            {% endif %}
+        {% else %}
+            <p>You are not allowed here! (and you know it...)</p>
+        {% endif %}
     {% else %}
         <p>You are not allowed here! (and you know it...)</p>
     {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add a confirmation before submitting the form
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (e) {
+        const isConfirmed = confirm("Are you sure you want to update the post?");
+        if (!isConfirmed) {
+            e.preventDefault();  // Prevent form submission if not confirmed
+        }
+    });
+</script>
 {% endblock %}

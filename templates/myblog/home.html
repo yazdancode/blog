@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}لیست پست‌ها{% endblock %}
 
 {% block content %}
@@ -7,6 +7,8 @@
     <h1 class="text-center my-4">لیست پست‌ها</h1>
 
     {% if object_list %}
+    <link rel="stylesheet" href="{% static 'myblog/css/list-style.css' %}">
+    <script src="{% static 'myblog/js/list.js' %}"></script>
         <ul class="list-group mb-4">
             {% for post in object_list %}
                 <li class="list-group-item">

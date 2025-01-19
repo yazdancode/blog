@@ -7,7 +7,7 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True, blank=True, default="default-slug")
+    slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -22,7 +22,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Post Title")
     title_tag = models.CharField(
         max_length=255,
-        verbose_name="Post Title Tag",
+        verbose_name="Post Title Tag"
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
     body = models.TextField(verbose_name="Post Content")
