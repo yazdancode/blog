@@ -36,22 +36,28 @@
         <br/>
 
         <!-- Like Button Form -->
-        <form action="{% url 'like_post' post.pk %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" name="post_id" value="{{ post.id }}" class="btn" id="green">
-                <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>
-            </button> {{ total_likes }} likes
+        <form method="POST" action="{% url 'like' post.id %}">
+            {% if user.is_authenticated %}
+                {% csrf_token %}
+                <button type="submit" {% if liked %}disabled{% endif %}>Like</button>
+                {{ total_likes }}
+            {% endif %}
         </form>
 
         <!-- Dislike Button Form -->
-        <form method="POST" action="{% url 'dislike_post' pk=post.pk %}">
-            {% csrf_token %}
-            <button type="submit" name="post_id" value="{{ post.id }}" class="btn" id="red">
-                <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>
-            </button> - {{ tottal_dislikes }} dislikes
+        <form method="POST" action="{% url 'dislike' post.id %}">
+            {% if user.is_authenticated %}
+                {% csrf_token %}
+                <button type="submit" {% if disliked %}disabled{% endif %}>Dislike</button>
+                {{ total_dislikes }}
+            {% endif %}
         </form>
+
+        {% if not user.is_authenticated %}
+            <small><a class="nav-link" href="{% url 'login' %}">login</a></small>
+        {% endif %}
+
         <script src="{% static 'myblog/js/main.js' %}"></script>
     </footer>
 </article>
 {% endblock %}
-

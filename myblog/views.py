@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -8,10 +9,8 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-
 from .forms import PostForm, UpdateForm
 from .models import Post, Category
-
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
@@ -42,12 +41,19 @@ class ArticleDetailView(BaseView, DetailView):
     def get_context_data(self, *args, **kwargs):
         cat_menu = super().get_context_data(**kwargs)
         context = super(ArticleDetailView, self).get_context_data(**kwargs)
-        stuff = get_object_or_404(Post, id=self.kwargs['pk'])
-        total_likes = stuff.total_likes()
-        tottal_dislikes= stuff.total_dislikes()
+        post = self.object  # Directly using the object from DetailView
+        total_likes = post.total_likes()
+        total_dislikes = post.total_dislikes()
+
+        # Checking if the user has liked the post
+        liked = post.likes.filter(id=self.request.user.id).exists()
+        disliked = post.dislikes.filter(id=self.request.user.id).exists()
+
         context["cat_menu"] = cat_menu
         context["total_likes"] = total_likes
-        context["tottal_dislikes"] = tottal_dislikes
+        context["total_dislikes"] = total_dislikes
+        context["liked"] = liked
+        context["disliked"] = disliked
         return context
 
 
@@ -90,31 +96,29 @@ class CategoryListView(View):
     template_name = "myblog/category_list.html"
 
     def get(self, request):
-        # گرفتن تمام دسته‌بندی‌ها
         cat_menu_list = Category.objects.all()
         return render(request, self.template_name, {"cat_menu_list": cat_menu_list})
 
-@login_required
-def LikeView(request, pk):
-    post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)
-    else:
-        post.likes.add(request.user)
-    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
+
+class LikeView(LoginRequiredMixin, View):
+    login_url = "/login/"  # Optional: Redirect to login page if not authenticated
+
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, id=pk)
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+        return HttpResponseRedirect(reverse("article-detail", args=[str(pk)]))
 
 
-@login_required
-def dislikeView(request, pk):
-    # Get the post using the pk in the URL and ensure it's the correct one
-    post = get_object_or_404(Post, id=pk)
+class DislikeView(LoginRequiredMixin, View):
+    login_url = "/login/"  # Optional: Redirect to login page if not authenticated
 
-    # Toggle the dislike status for the current user
-    if request.user in post.dislikes.all():
-        post.dislikes.remove(request.user)
-    else:
-        post.dislikes.add(request.user)
-
-    # Redirect back to the article detail page
-    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
-
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, id=pk)
+        if post.dislikes.filter(id=request.user.id).exists():
+            post.dislikes.remove(request.user)
+        else:
+            post.dislikes.add(request.user)
+        return HttpResponseRedirect(reverse("article-detail", args=[str(pk)]))
