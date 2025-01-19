@@ -28,6 +28,8 @@ class Post(models.Model):
     body = models.TextField(verbose_name="Post Content")
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default="coding")
+    likes = models.ManyToManyField(User, related_name="blog_posts", blank=True)
+    dislikes = models.ManyToManyField(User, related_name="blog_dislikes", blank=True)
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Last Updated")
 
@@ -42,3 +44,9 @@ class Post(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse("home")
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_dislikes(self):
+        return self.dislikes.count()

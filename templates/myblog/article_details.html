@@ -1,21 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'base.html'%}
+{% load static %}
 {% block title %}{{ post.title_tag }}{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'myblog/css/style.css' %}">
 <article class="post-detail">
     <header class="mb-4">
         current user: {{ user.id }} <br>
-        post auther: {{ post.author.id }}
+        post author: {{ post.author.id }}
         <h1 class="display-4">{{ post.title }}!</h1>
         <small class="post-meta text-muted d-block mb-2">
             نوشته شده توسط: {{ post.author.first_name }} {{ post.author.last_name }} {{ post.post_date }}
             <small>
                 {% if user.is_authenticated %}
-                {% if user.id == post.author.id %}
-                    <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
-                    <a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a>
-                {% endif %}    
-            {% endif %}
+                    {% if user.id == post.author.id %}
+                        <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
+                        <a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a>
+                    {% endif %}
+                {% endif %}
             </small>
             <br>
             <time datetime="{{ post.created_at }}">{{ post.created_at|date:"j F Y, g:i a" }}</time>
@@ -29,6 +31,27 @@
 
     <footer>
         <a href="{% url 'home' %}" class="btn btn-secondary">بازگشت به خانه</a>
+        <br/><br>
+        <hr>
+        <br/>
+
+        <!-- Like Button Form -->
+        <form action="{% url 'like_post' post.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" name="post_id" value="{{ post.id }}" class="btn" id="green">
+                <i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>
+            </button> {{ total_likes }} likes
+        </form>
+
+        <!-- Dislike Button Form -->
+        <form method="POST" action="{% url 'dislike_post' pk=post.pk %}">
+            {% csrf_token %}
+            <button type="submit" name="post_id" value="{{ post.id }}" class="btn" id="red">
+                <i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>
+            </button> - {{ tottal_dislikes }} dislikes
+        </form>
+        <script src="{% static 'myblog/js/main.js' %}"></script>
     </footer>
 </article>
 {% endblock %}
+

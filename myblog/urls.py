@@ -9,6 +9,8 @@ from myblog.views import (
     AddCategoryView,
     CategoryView,
     CategoryListView,
+    LikeView,
+    dislikeView,
 )
 
 urlpatterns = [
@@ -20,4 +22,6 @@ urlpatterns = [
     path("add_category/", AddCategoryView.as_view(), name="add_category"),
     path("category-list/", CategoryListView.as_view(), name="category_list"),
     path("category/<str:category_name>/", CategoryView.as_view(), name="category_view"),
+    path('like/<int:pk>', LikeView, name='like_post'),
+    path('like/<int:pk>', dislikeView, name='dislike_post')
 ]

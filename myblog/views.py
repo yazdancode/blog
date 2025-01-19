@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import (
     ListView,
@@ -11,6 +11,9 @@ from django.views.generic import (
 
 from .forms import PostForm, UpdateForm
 from .models import Post, Category
+
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 
 class BaseView:
@@ -39,7 +42,12 @@ class ArticleDetailView(BaseView, DetailView):
     def get_context_data(self, *args, **kwargs):
         cat_menu = super().get_context_data(**kwargs)
         context = super(ArticleDetailView, self).get_context_data(**kwargs)
+        stuff = get_object_or_404(Post, id=self.kwargs['pk'])
+        total_likes = stuff.total_likes()
+        tottal_dislikes= stuff.total_dislikes()
         context["cat_menu"] = cat_menu
+        context["total_likes"] = total_likes
+        context["tottal_dislikes"] = tottal_dislikes
         return context
 
 
@@ -85,3 +93,28 @@ class CategoryListView(View):
         # گرفتن تمام دسته‌بندی‌ها
         cat_menu_list = Category.objects.all()
         return render(request, self.template_name, {"cat_menu_list": cat_menu_list})
+
+@login_required
+def LikeView(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
+
+
+@login_required
+def dislikeView(request, pk):
+    # Get the post using the pk in the URL and ensure it's the correct one
+    post = get_object_or_404(Post, id=pk)
+
+    # Toggle the dislike status for the current user
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+    else:
+        post.dislikes.add(request.user)
+
+    # Redirect back to the article detail page
+    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
+
