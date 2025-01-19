@@ -4,14 +4,18 @@
 {% block content %}
 <article class="post-detail">
     <header class="mb-4">
-        <h1 class="display-4">{{ post.title }}</h1>
+        current user: {{ user.id }} <br>
+        post auther: {{ post.author.id }}
+        <h1 class="display-4">{{ post.title }}!</h1>
         <small class="post-meta text-muted d-block mb-2">
             نوشته شده توسط: {{ post.author.first_name }} {{ post.author.last_name }} {{ post.post_date }}
             <small>
                 {% if user.is_authenticated %}
-                <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
-                <a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a>
-                {% endif %}
+                {% if user.id == post.author.id %}
+                    <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
+                    <a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a>
+                {% endif %}    
+            {% endif %}
             </small>
             <br>
             <time datetime="{{ post.created_at }}">{{ post.created_at|date:"j F Y, g:i a" }}</time>
