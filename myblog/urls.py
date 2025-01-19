@@ -11,6 +11,7 @@ from myblog.views import (
     CategoryListView,
     LikeView,
     DislikeView,
+    ShareView,
 )
 
 urlpatterns = [
@@ -23,5 +24,6 @@ urlpatterns = [
     path("category-list/", CategoryListView.as_view(), name="category_list"),
     path("category/<str:category_name>/", CategoryView.as_view(), name="category_view"),
     path("like/<int:pk>", LikeView.as_view(), name="like"),
-    path("like/<int:pk>", DislikeView.as_view(), name="dislike"),
+    path("dislike/<int:pk>", DislikeView.as_view(), name="dislike"),
+    path("article/<int:pk>/share/", ShareView.as_view(), name="share-post"),
 ]

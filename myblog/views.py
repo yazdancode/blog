@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -9,10 +10,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from .forms import PostForm, UpdateForm
+
+from .forms import PostForm, UpdateForm, ShareForm
 from .models import Post, Category
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 
 
 class BaseView:
@@ -44,6 +44,7 @@ class ArticleDetailView(BaseView, DetailView):
         post = self.object  # Directly using the object from DetailView
         total_likes = post.total_likes()
         total_dislikes = post.total_dislikes()
+        total_share = post.shares.count()
 
         # Checking if the user has liked the post
         liked = post.likes.filter(id=self.request.user.id).exists()
@@ -54,6 +55,7 @@ class ArticleDetailView(BaseView, DetailView):
         context["total_dislikes"] = total_dislikes
         context["liked"] = liked
         context["disliked"] = disliked
+        context["totaL_share"] = total_share
         return context
 
 
@@ -103,7 +105,8 @@ class CategoryListView(View):
 class LikeView(LoginRequiredMixin, View):
     login_url = "/login/"  # Optional: Redirect to login page if not authenticated
 
-    def post(self, request, pk, *args, **kwargs):
+    @staticmethod
+    def post(request, pk, *args, **kwargs):
         post = get_object_or_404(Post, id=pk)
         if post.likes.filter(id=request.user.id).exists():
             post.likes.remove(request.user)
@@ -115,10 +118,25 @@ class LikeView(LoginRequiredMixin, View):
 class DislikeView(LoginRequiredMixin, View):
     login_url = "/login/"  # Optional: Redirect to login page if not authenticated
 
-    def post(self, request, pk, *args, **kwargs):
+    @staticmethod
+    def post(request, pk, *args, **kwargs):
         post = get_object_or_404(Post, id=pk)
         if post.dislikes.filter(id=request.user.id).exists():
             post.dislikes.remove(request.user)
         else:
             post.dislikes.add(request.user)
         return HttpResponseRedirect(reverse("article-detail", args=[str(pk)]))
+
+
+class ShareView(View):
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        form = ShareForm()
+        return render(request, "myblog/share_post.html", {"form": form, "post": post})
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        form = ShareForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect(reverse("article-detail", args=[str(pk)]))
+        return render(request, "myblog/share_post.html", {"form": form, "post": post})

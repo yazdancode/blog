@@ -30,6 +30,8 @@ class Post(models.Model):
     category = models.CharField(max_length=255, default="coding")
     likes = models.ManyToManyField(User, related_name="blog_posts", blank=True)
     dislikes = models.ManyToManyField(User, related_name="blog_dislikes", blank=True)
+    shares = models.ManyToManyField(User, related_name="shared_posts", blank=True)
+    target_users = models.ManyToManyField(User, related_name="target_posts", blank=True)
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Last Updated")
 
