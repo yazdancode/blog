@@ -3,23 +3,19 @@ from django import forms
 from django.core.cache import cache
 from .models import Post, Category
 
-# دریافت گزینه‌های دسته‌بندی با استفاده از حافظه پنهان
+# کلید حافظه پنهان برای دسته‌بندی‌ها
 CATEGORIES_CACHE_KEY = "categories"
-categories = cache.get(CATEGORIES_CACHE_KEY)
-if not categories:
-    categories = list(Category.objects.all().values_list("name", "name"))
-    cache.set(CATEGORIES_CACHE_KEY, categories, 3600)  # ذخیره برای 1 ساعت
-
 
 # تابع کمکی برای تنظیم استایل ویجت‌ها
-def form_widget_attrs(base_attrs, **styles):
+def form_widget_attrs(base_attrs=None, **styles):
     """
     تنظیمات استایل ویجت را به صورت یکپارچه مدیریت می‌کند.
     """
+    if base_attrs is None:
+        base_attrs = {}
     style_string = "; ".join(f"{k}: {v}" for k, v in styles.items())
     base_attrs["style"] = style_string
     return base_attrs
-
 
 # توابع کمکی برای اعتبارسنجی متن فارسی
 def validate_persian_text(text, field_name, min_length=None, max_length=None):
@@ -38,7 +34,6 @@ def validate_persian_text(text, field_name, min_length=None, max_length=None):
         raise forms.ValidationError(f"{field_name} باید فقط شامل حروف فارسی باشد.")
     return text
 
-
 def validate_no_special_chars(text, field_name):
     """
     بررسی می‌کند که متن شامل کاراکترهای خاص نباشد.
@@ -46,7 +41,6 @@ def validate_no_special_chars(text, field_name):
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", text):
         raise forms.ValidationError(f"{field_name} نباید شامل کاراکترهای خاص باشد.")
     return text
-
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -66,25 +60,24 @@ class PostForm(forms.ModelForm):
             ),
             "title_tag": forms.TextInput(
                 attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "برچسب عنوان را اینجا وارد کنید",
-                    },
+                    {"class": "form-control", "placeholder": "برچسب عنوان را اینجا وارد کنید", 'id':'elder'},
                     color="#303b51",
                     font_size="16px",
                     font_weight="600",
                 )
             ),
-            "author": forms.Select(attrs={"class": "form-control"}),
-            "category": forms.Select(
-                choices=categories, attrs={"class": "form-control"}
+            "author": forms.TextInput(
+                attrs=form_widget_attrs(
+                    {"class": "form-control", "placeholder": "نویسنده را اینجا وارد کنید"},
+                    color="#303b51",
+                    font_size="16px",
+                    font_weight="600",
+                )
             ),
+            "category": forms.Select(attrs={"class": "form-control"}),
             "body": forms.Textarea(
                 attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "متن پست را اینجا وارد کنید",
-                    },
+                    {"class": "form-control", "placeholder": "متن پست را اینجا وارد کنید"},
                     color="#1a202c",
                     font_size="14px",
                     font_weight="400",
@@ -93,6 +86,15 @@ class PostForm(forms.ModelForm):
                 )
             ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # کش کردن دسته‌بندی‌ها به صورت lazy
+        categories = cache.get(CATEGORIES_CACHE_KEY)
+        if not categories:
+            categories = list(Category.objects.all().values_list("name", "name"))
+            cache.set(CATEGORIES_CACHE_KEY, categories, 3600)  # ذخیره برای 1 ساعت
+        self.fields["category"].choices = categories
 
     def clean_title(self):
         """
@@ -117,14 +119,13 @@ class PostForm(forms.ModelForm):
         اعتبارسنجی متن پست
         """
         body = self.cleaned_data.get("body")
-        banned_words = r"نامناسب|غیرمجاز|کلمه‌بد"
-        if re.search(banned_words, body):
+        banned_words = ["نامناسب", "غیرمجاز", "کلمه‌بد"]
+        if any(word in body for word in banned_words):
             raise forms.ValidationError("متن پست نباید شامل کلمات نامناسب باشد.")
         body = validate_persian_text(body, "متن پست", min_length=10, max_length=500)
         if not body.strip():
             raise forms.ValidationError("متن پست نمی‌تواند فقط شامل فاصله باشد.")
         return body
-
 
 class UpdateForm(forms.ModelForm):
     class Meta:
@@ -132,21 +133,24 @@ class UpdateForm(forms.ModelForm):
         fields = ("title", "title_tag", "body")
         widgets = {
             "title": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "عنوان را اینجا وارد کنید",
-                }
+                attrs=form_widget_attrs(
+                    {"class": "form-control", "placeholder": "عنوان را اینجا وارد کنید"},
+                    color="#1a202c",
+                    font_size="16px",
+                    font_weight="600",
+                )
             ),
             "title_tag": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "برچسب عنوان را اینجا وارد کنید",
-                }
+                attrs=form_widget_attrs(
+                    {"class": "form-control", "placeholder": "برچسب عنوان را اینجا وارد کنید"},
+                    color="#303b51",
+                    font_size="14px",
+                )
             ),
             "body": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "متن پست را اینجا وارد کنید",
-                }
+                attrs=form_widget_attrs(
+                    {"class": "form-control", "placeholder": "متن پست را اینجا وارد کنید"},
+                    line_height="1.5",
+                )
             ),
         }

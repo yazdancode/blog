@@ -12,7 +12,12 @@
                 <button type="submit" class="btn btn-secondary">Post</button>
             </form>
         </div>
+        <script>
+            var name = "{{ user.id}}";
+            document.getElementById("elder").placeholder = name;
+        </script>
     {% else %}
+
         <p>You are not allowed here! (and you know it...)</p>
     {% endif %}
 {% endblock %}
