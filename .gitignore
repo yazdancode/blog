@@ -133,4 +133,3 @@ path to the file which used by sqlite
 *.yml
 .git
 myenv
-static

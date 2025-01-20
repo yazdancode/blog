@@ -1,0 +1,110 @@
+/* myblog/static/myblog/css/category-form.css */
+.category-form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-label {
+    padding: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group p {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.help-text {
+    font-size: 0.875rem;
+    color: #718096;
+    margin-top: 0.25rem;
+}
+
+.btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #357abd;
+}
+
+.btn-secondary:active {
+    background-color: #2d6da3;
+}
+
+/* Error message styling */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    color: #e53e3e;
+    font-size: 0.875rem;
+}
+
+/* Unauthorized message styling */
+.unauthorized-message {
+    text-align: center;
+    padding: 2rem;
+    color: #e53e3e;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .category-form-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}

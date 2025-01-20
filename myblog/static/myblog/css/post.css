@@ -1,0 +1,120 @@
+/* Post styling */
+h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.post-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+/* Comments section */
+h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin: 2rem 0 1rem;
+}
+
+.comments-list {
+    list-style: none;
+}
+
+.comment-item {
+    background: white;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.comment-item:hover {
+    transform: translateX(-5px);
+}
+
+.comment-author {
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.no-comments {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* Comment form */
+h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+}
+
+.comment-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Error message styling */
+.error-message {
+    color: #e74c3c;
+    background: #fde8e8;
+    padding: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+/* Success message styling */
+.success-message {
+    color: #27ae60;
+    background: #e8f8e8;
+    padding: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: none;
+}
