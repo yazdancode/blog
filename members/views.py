@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import login
 from .forms import SignUpForm
 
@@ -17,11 +18,15 @@ class UserRegisterView(CreateView):
         return redirect(self.success_url)
 
 
-# class ProfileView(FormView):
-#     template_name = "registration/login.html"
-#     form_class = ProfileForm
-#     success_url = reverse_lazy("home")
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return redirect(self.success_url)
+class UserEditeView(UpdateView):
+    form_class = UserChangeForm
+    template_name = "registration/edit_profile.html"
+    success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect(self.success_url)
+
+    def get_object(self, **kwargs):
+        return self.request.user
