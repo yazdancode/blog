@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
-{% block title %}Edit Profile{% endblock %}
-{% block content %}
 
-<h1>Edit Profile</h1>
-<div class="form-label">
-    <form method="POST" action="" class="form-group">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-secondary">Update Profile</button>
-    </form>
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'members/css/profile-edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-edit-container">
+    <h1>Edit Profile</h1>
+    <div class="form-label">
+        <form method="POST" action="" class="form-group">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-secondary">Update Profile</button>
+        </form>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'members/js/profile-edit.js' %}"></script>
 {% endblock %}
