@@ -10,9 +10,9 @@ class SignUpForm(UserCreationForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "ایمیل خود را وارد کنید",
-                "v-model":"email",
-                "id":"email",
-                "type":"email"
+                "v-model": "email",
+                "id": "email",
+                "type": "email",
             }
         ),
     )
@@ -22,8 +22,8 @@ class SignUpForm(UserCreationForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "نام کوچک خود را وارد کنید",
-                'id':"fname",
-                'text':'text',
+                "id": "fname",
+                "text": "text",
             }
         ),
     )
@@ -33,21 +33,15 @@ class SignUpForm(UserCreationForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "نام خانوادگی خود را وارد کنید",
-                "id":"sname",
-                "type":"text",
+                "id": "sname",
+                "type": "text",
             }
         ),
     )
-    GENDER_CHOICES = [
-        ("M", "مرد"),
-        ("F", "زن"),
-        ("O", "سایر")
-    ]
+    GENDER_CHOICES = [("M", "مرد"), ("F", "زن"), ("O", "سایر")]
 
     gender = forms.ChoiceField(
-        choices=GENDER_CHOICES, widget=forms.Select(attrs={
-            "class": "form-control"
-        })
+        choices=GENDER_CHOICES, widget=forms.Select(attrs={"class": "form-control"})
     )
     age = forms.IntegerField(
         max_value=99,
@@ -56,7 +50,7 @@ class SignUpForm(UserCreationForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "سن خود را وارد کنید",
-                "type":"number",
+                "type": "number",
             }
         ),
     )
@@ -98,5 +92,3 @@ class SignUpForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("این ایمیل قبلاً ثبت شده است.")
         return email
-    
-

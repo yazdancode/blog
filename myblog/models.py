@@ -21,15 +21,15 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Post Title")
-    title_tag = models.CharField(
-        max_length=255,
-        verbose_name="Post Title Tag"
-    )
+    title_tag = models.CharField(max_length=255, verbose_name="Post Title Tag")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
-    #body = models.TextField(verbose_name="Post Content")
+    # body = models.TextField(verbose_name="Post Content")
     body = RichTextField(blank=True, null=True)
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default="coding")
+    snippet = models.CharField(
+        max_length=255, default="Click Link Above To Read Blog Post...."
+    )
     likes = models.ManyToManyField(User, related_name="blog_posts", blank=True)
     dislikes = models.ManyToManyField(User, related_name="blog_dislikes", blank=True)
     shares = models.ManyToManyField(User, related_name="shared_posts", blank=True)

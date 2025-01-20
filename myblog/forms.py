@@ -50,7 +50,7 @@ def validate_no_special_chars(text, field_name):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "title_tag", "author", "category", "body")
+        fields = ("title", "title_tag", "author", "category", "body", "snippet")
         widgets = {
             "title": forms.TextInput(
                 attrs=form_widget_attrs(
@@ -94,6 +94,19 @@ class PostForm(forms.ModelForm):
                     {
                         "class": "form-control",
                         "placeholder": "متن پست را اینجا وارد کنید",
+                    },
+                    color="#1a202c",
+                    font_size="14px",
+                    font_weight="400",
+                    line_height="1.5",
+                    padding="10px",
+                )
+            ),
+            "snippet": forms.Textarea(
+                attrs=form_widget_attrs(
+                    {
+                        "class": "form-control",
+                        "placeholder": "خلاصه پست را اینجا وارد کنید",
                     },
                     color="#1a202c",
                     font_size="14px",
