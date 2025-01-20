@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
+from django.utils import timezone
 
 
 class Category(models.Model):
@@ -27,9 +28,7 @@ class Post(models.Model):
     body = RichTextField(blank=True, null=True)
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default="coding")
-    snippet = models.CharField(
-        max_length=255, default="Click Link Above To Read Blog Post...."
-    )
+    snippet = models.CharField(max_length=255)
     likes = models.ManyToManyField(User, related_name="blog_posts", blank=True)
     dislikes = models.ManyToManyField(User, related_name="blog_dislikes", blank=True)
     shares = models.ManyToManyField(User, related_name="shared_posts", blank=True)
@@ -54,3 +53,14 @@ class Post(models.Model):
 
     def total_dislikes(self):
         return self.dislikes.count()
+
+
+# class Comment(models.Model):
+#     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
+#     author = models.ForeignKey(User, on_delete=models.CASCADE)
+#     comment = models.TextField()
+#     created_at = models.DateTimeField(default=timezone.now)
+#
+#
+#     def __str__(self):
+#         return f"Comment by {self.author} on {self.post.title}"

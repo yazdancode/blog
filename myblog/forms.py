@@ -161,7 +161,7 @@ class PostForm(forms.ModelForm):
 class UpdateForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "title_tag", "body")
+        fields = ("title", "title_tag", "body", "snippet")
         widgets = {
             "title": forms.TextInput(
                 attrs=form_widget_attrs(
@@ -193,6 +193,15 @@ class UpdateForm(forms.ModelForm):
                     line_height="1.5",
                 )
             ),
+            "snippet": forms.Textarea(
+                attrs=form_widget_attrs(
+                    {
+                        "class": "form-control",
+                        "placeholder": "متن پست را اینجا وارد کنید",
+                    },
+                    line_height="1.5",
+                )
+            ),
         }
 
 
@@ -203,3 +212,21 @@ class ShareForm(forms.Form):
         required=False,
         label="کاربرانی که به آن‌ها پیام ارسال شود",
     )
+
+
+# class CommentForm(forms.ModelForm):
+#     class Meta:
+#         model = Comment
+#         fields = ['post', 'comment']
+#         widgets = {
+#             'comment': forms.Textarea(attrs={'placeholder': 'نظر خود را وارد کنید', 'rows': 4, 'cols': 50}),
+#         }
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['post'].widget = forms.HiddenInput()
+#
+#     def clean_comment(self):
+#         comment = self.cleaned_data.get('comment')
+#         if len(comment) < 5:
+#             raise forms.ValidationError("نظر باید حداقل ۵ کاراکتر باشد.")
+#         return comment
