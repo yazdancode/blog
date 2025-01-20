@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField
 
 
 class Category(models.Model):
@@ -25,7 +26,8 @@ class Post(models.Model):
         verbose_name="Post Title Tag"
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
-    body = models.TextField(verbose_name="Post Content")
+    #body = models.TextField(verbose_name="Post Content")
+    body = RichTextField(blank=True, null=True)
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default="coding")
     likes = models.ManyToManyField(User, related_name="blog_posts", blank=True)

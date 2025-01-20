@@ -12,6 +12,7 @@
             <div class="form-label">
                 <form method="POST" action="" class="form-group">
                     {% csrf_token %}
+                    {{ form.media }}
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-secondary">Post</button>
                 </form>

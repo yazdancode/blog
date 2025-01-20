@@ -7,13 +7,24 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": "ایمیل خود را وارد کنید"}
+            attrs={
+                "class": "form-control",
+                "placeholder": "ایمیل خود را وارد کنید",
+                "v-model":"email",
+                "id":"email",
+                "type":"email"
+            }
         ),
     )
     first_name = forms.CharField(
         max_length=100,
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "نام کوچک خود را وارد کنید"}
+            attrs={
+                "class": "form-control",
+                "placeholder": "نام کوچک خود را وارد کنید",
+                'id':"fname",
+                'text':'text',
+            }
         ),
     )
     last_name = forms.CharField(
@@ -22,23 +33,31 @@ class SignUpForm(UserCreationForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "نام خانوادگی خود را وارد کنید",
+                "id":"sname",
+                "type":"text",
             }
         ),
     )
-
-    # Gender field with predefined choices
-    GENDER_CHOICES = [("M", "مرد"), ("F", "زن"), ("O", "سایر")]
+    GENDER_CHOICES = [
+        ("M", "مرد"),
+        ("F", "زن"),
+        ("O", "سایر")
+    ]
 
     gender = forms.ChoiceField(
-        choices=GENDER_CHOICES, widget=forms.Select(attrs={"class": "form-control"})
+        choices=GENDER_CHOICES, widget=forms.Select(attrs={
+            "class": "form-control"
+        })
     )
-
-    # Age field with appropriate widget for numbers
     age = forms.IntegerField(
         max_value=99,
-        min_value=18,  # Set a realistic age minimum
+        min_value=18,
         widget=forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "سن خود را وارد کنید"}
+            attrs={
+                "class": "form-control",
+                "placeholder": "سن خود را وارد کنید",
+                "type":"number",
+            }
         ),
     )
 
@@ -79,3 +98,5 @@ class SignUpForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("این ایمیل قبلاً ثبت شده است.")
         return email
+    
+
