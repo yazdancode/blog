@@ -1,18 +1,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy, reverse
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import (
-    ListView,
-    DetailView,
     CreateView,
-    UpdateView,
     DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
 )
 
-from .forms import PostForm, UpdateForm, ShareForm
-from .models import Post, Category
+from .forms import PostForm, ShareForm, UpdateForm
+from .models import Category, Post
 
 
 class BaseView:
@@ -86,9 +86,10 @@ class CategoryView(View):
     template_name = "myblog/category.html"
 
     def get(self, request, category_name):
+        if not category_name:
+            raise Http404("Category not found")
         category = get_object_or_404(Category, slug=category_name)
         posts = Post.objects.filter(category=category)
-
         return render(
             request, self.template_name, {"category": category, "posts": posts}
         )

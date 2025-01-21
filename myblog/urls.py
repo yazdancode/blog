@@ -1,17 +1,17 @@
 from django.urls import path
 
 from myblog.views import (
-    HomeView,
-    ArticleDetailView,
-    AddPostView,
-    UpdatePostView,
-    DeletePostView,
     AddCategoryView,
-    CategoryView,
+    AddPostView,
+    ArticleDetailView,
     CategoryListView,
-    LikeView,
+    CategoryView,
+    DeletePostView,
     DislikeView,
+    HomeView,
+    LikeView,
     ShareView,
+    UpdatePostView,
 )
 
 urlpatterns = [
