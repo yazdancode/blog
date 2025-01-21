@@ -92,7 +92,7 @@ class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(
         max_length=50,
         min_length=8,
-        label='رمز عبور فعلی',
+        label="رمز عبور فعلی",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
@@ -103,7 +103,7 @@ class PasswordChangingForm(PasswordChangeForm):
     new_password1 = forms.CharField(
         max_length=50,
         min_length=8,
-        label='رمز عبور جدید',
+        label="رمز عبور جدید",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
@@ -114,7 +114,7 @@ class PasswordChangingForm(PasswordChangeForm):
     new_password2 = forms.CharField(
         max_length=50,
         min_length=8,
-        label='تایید رمز عبور',
+        label="تایید رمز عبور",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",

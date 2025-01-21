@@ -1,4 +1,4 @@
-from ckeditor.fields import RichTextField
+from tinymce.models import HTMLField
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -21,10 +21,11 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Post Title")
+    header_image = models.ImageField(null=True, blank=True, upload_to="images/")
     title_tag = models.CharField(max_length=255, verbose_name="Post Title Tag")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Author")
     # body = models.TextField(verbose_name="Post Content")
-    body = RichTextField(blank=True, null=True)
+    body = HTMLField(blank=True, null=True, verbose_name="Post Content")
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default="coding")
     snippet = models.CharField(max_length=255)

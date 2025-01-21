@@ -52,7 +52,15 @@ def validate_no_special_chars(text, field_name):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "title_tag", "author", "category", "body", "snippet")
+        fields = (
+            "title",
+            "title_tag",
+            "author",
+            "category",
+            "body",
+            "snippet",
+            "header_image",
+        )
         widgets = {
             "title": forms.TextInput(
                 attrs=form_widget_attrs(
