@@ -1,45 +1,126 @@
+// profile-edit.js
 document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
     const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, textarea, select');
 
-    // Add required class to form groups with required fields
-    document.querySelectorAll('form [required]').forEach(field => {
-        field.closest('p').classList.add('required');
+    // Add custom validation styles
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(input);
+        });
     });
 
-    // Add form group class to all form paragraphs
-    document.querySelectorAll('form p').forEach(p => {
-        p.classList.add('form-group');
-    });
-
-    // Form submission handling
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const button = this.querySelector('button[type="submit"]');
-            button.textContent = 'Updating...';
-            button.disabled = true;
-
-            // Re-enable button after short delay
-            setTimeout(() => {
-                button.disabled = false;
-                button.textContent = 'Update Profile';
-            }, 2000);
-        });
-    }
-
-    // Add floating labels effect
-    document.querySelectorAll('.form-group input, .form-group textarea').forEach(field => {
-        field.addEventListener('focus', function() {
-            this.classList.add('field-focus');
-        });
-
-        field.addEventListener('blur', function() {
-            if (!this.value) {
-                this.classList.remove('field-focus');
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isValid = false;
             }
         });
 
-        if (field.value) {
-            field.classList.add('field-focus');
+        if (!isValid) {
+            e.preventDefault();
+            scrollToFirstError();
         }
+    });
+
+    // Field validation function
+    function validateField(input) {
+        const value = input.value.trim();
+        let isValid = true;
+
+        // Remove existing error messages
+        const existingError = input.parentElement.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        // Required field validation
+        if (input.hasAttribute('required') && !value) {
+            showError(input, 'This field is required');
+            isValid = false;
+        }
+
+        // Email validation
+        if (input.type === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError(input, 'Please enter a valid email address');
+                isValid = false;
+            }
+        }
+
+        // Update input styles based on validation
+        if (isValid) {
+            input.classList.remove('invalid');
+            input.classList.add('valid');
+        } else {
+            input.classList.remove('valid');
+            input.classList.add('invalid');
+        }
+
+        return isValid;
+    }
+
+    // Show error message
+    function showError(input, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        input.parentElement.appendChild(errorDiv);
+    }
+
+    // Scroll to first error
+    function scrollToFirstError() {
+        const firstError = document.querySelector('.invalid');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Handle file input preview if present
+    const fileInput = form.querySelector('input[type="file"]');
+    if (fileInput) {
+        const previewContainer = document.createElement('div');
+        previewContainer.className = 'image-preview';
+        fileInput.parentElement.appendChild(previewContainer);
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px;">
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.innerHTML = '';
+            }
+        });
+    }
+
+    // Unsaved changes warning
+    let formChanged = false;
+    
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            formChanged = true;
+        });
+    });
+
+    window.addEventListener('beforeunload', (e) => {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Clear warning when form is submitted
+    form.addEventListener('submit', () => {
+        formChanged = false;
     });
 });
