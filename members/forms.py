@@ -1,6 +1,10 @@
 import jdatetime
 from django import forms
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.forms import (
+    UserChangeForm,
+    UserCreationForm,
+    PasswordChangeForm,
+)
 from django.contrib.auth.models import User
 
 
@@ -11,9 +15,6 @@ class BaseUserForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "ایمیل خود را وارد کنید",
-                "id": "email",
-                "type": "email",
-                "id": "email",
             }
         ),
     )
@@ -23,8 +24,6 @@ class BaseUserForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "نام کوچک خود را وارد کنید",
-                "id": "fname",
-                "type": "text",
             }
         ),
     )
@@ -34,12 +33,10 @@ class BaseUserForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "نام خانوادگی خود را وارد کنید",
-                "id": "sname",
             }
         ),
     )
     GENDER_CHOICES = [("M", "مرد"), ("F", "زن"), ("O", "سایر")]
-
     gender = forms.ChoiceField(
         choices=GENDER_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"}),
@@ -51,8 +48,6 @@ class BaseUserForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "سن خود را وارد کنید",
-                "type": "number",
-                "id": "integer",
             }
         ),
     )
@@ -62,33 +57,6 @@ class BaseUserForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "نام کاربری خود را وارد کنید",
-                "type": "string",
-                "id": "username",
-            }
-        ),
-    )
-    last_login = forms.DateTimeField(
-        required=False,
-        widget=forms.DateTimeInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "آخرین ورود",
-                "id": "last_login",
-                "type": "datetime-local",
-            }
-        ),
-    )
-    is_superuser = forms.BooleanField(required=False, label="is_superuser")
-    is_staff = forms.BooleanField(required=False, label="is_staff")
-    is_active = forms.BooleanField(required=False, label="is_active")
-    date_joined = forms.DateTimeField(
-        required=False,
-        widget=forms.DateTimeInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "تاریخ عضویت",
-                "id": "date_joined",
-                "type": "datetime-local",
             }
         ),
     )
@@ -102,9 +70,6 @@ class BaseUserForm(forms.ModelForm):
             "last_name": "نام خانوادگی",
             "email": "ایمیل",
         }
-        help_texts = {
-            "username": "نام کاربری خود را وارد کنید.",
-        }
 
 
 class SignUpForm(UserCreationForm, BaseUserForm):
@@ -117,15 +82,51 @@ class SignUpForm(UserCreationForm, BaseUserForm):
             raise forms.ValidationError("این ایمیل قبلاً ثبت شده است.")
         return email
 
-    def clean_last_login(self):
-        last_login = self.cleaned_data["last_login"]
-        # Converting Gregorian date to Shamsi (Jalali)
-        j_date = jdatetime.datetime.fromgregorian(datetime=last_login).strftime(
-            "%Y/%m/%d"
-        )
-        return j_date
-
 
 class EditProfileForm(UserChangeForm, BaseUserForm):
     class Meta(BaseUserForm.Meta):
         exclude = ("password",)
+
+
+class PasswordChangingForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        max_length=50,
+        min_length=8,
+        label='رمز عبور فعلی',
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "رمز عبور فعلی",
+            }
+        ),
+    )
+    new_password1 = forms.CharField(
+        max_length=50,
+        min_length=8,
+        label='رمز عبور جدید',
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "رمز عبور جدید",
+            }
+        ),
+    )
+    new_password2 = forms.CharField(
+        max_length=50,
+        min_length=8,
+        label='تایید رمز عبور',
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "تکرار رمز عبور جدید",
+            }
+        ),
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            "old_password",
+            "new_password1",
+            "new_password2",
+        ]
