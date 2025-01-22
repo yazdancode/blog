@@ -11,6 +11,9 @@
 <div class="profile-edit-container">
     <div class="profile-edit-card">
         <h1 class="profile-edit-title">Edit Profile</h1>
+        </br></br/>
+        {{ user.profile.bio  }}
+        </br></br>
         <div class="profile-edit-form">
             <form method="POST" action="" enctype="multipart/form-data">
                 {% csrf_token %}
