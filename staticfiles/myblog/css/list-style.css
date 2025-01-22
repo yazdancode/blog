@@ -1,0 +1,140 @@
+/* myblog/static/myblog/css/list-style.css */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --text-light: #7f8c8d;
+    --border-color: #ecf0f1;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* RTL Settings */
+body {
+    direction: rtl;
+    text-align: right;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Post List Styling */
+.list-group {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background-color: rgba(236, 240, 241, 0.5);
+}
+
+/* Post Item Styling */
+.post-item h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.post-item h2 a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.post-item h2 a:hover {
+    color: var(--accent-color);
+}
+
+.post-author {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.post-author a {
+    text-decoration: none;
+}
+
+.post-body {
+    color: var(--secondary-color);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Action Buttons */
+.post-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Pagination */
+.pagination-container {
+    margin-top: 2rem;
+    padding: 1rem 0;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Empty State */
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .post-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-sm {
+        width: 100%;
+        text-align: center;
+    }
+}

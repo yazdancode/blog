@@ -88,8 +88,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "static"
+
+# مسیرهایی که فایل‌های استاتیک در زمان توسعه از آن خوانده می‌شوند
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# مسیر جمع‌آوری فایل‌های استاتیک برای محیط تولید
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Media files (uploaded by users)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -97,9 +105,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Login redirect URLs
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
-
-MEDIA_URL = "/media/"
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-STATICFILES_DIRS = os.path.join(BASE_DIR, "static")

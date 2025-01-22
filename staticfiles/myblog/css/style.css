@@ -1,0 +1,106 @@
+/*body{*/
+/*  margin: 40px;*/
+/*}*/
+
+button{
+  cursor: pointer;
+  outline: 0;
+  color: #AAA;
+
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.green{
+  color: green;
+}
+
+.red{
+  color: red;
+}
+
+.post-detail {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.post-meta {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.post-body {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #2c3e50;
+}
+
+.post-body img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+}
+
+/* RTL support for Persian text */
+[lang="fa"],
+.post-meta,
+.btn {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Action buttons styling */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background-color: #e0a800;
+}
+
+/* Counter displays */
+.counter-display {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .post-detail {
+        margin: 1rem auto;
+    }
+
+    .display-4 {
+        font-size: 2rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

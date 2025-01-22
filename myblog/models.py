@@ -19,6 +19,14 @@ class Category(models.Model):
         return self.name
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    bio = models.TextField()
+
+    def __str__(self):
+        return f"{self.user.username}"
+
+
 class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Post Title")
     header_image = models.ImageField(null=True, blank=True, upload_to="images/")

@@ -27,6 +27,9 @@
     </header>
 
     <section class="post-body mb-4">
+        {% if post.header_image %}
+            <img src="{{  post.header_image.url }}" alt="#">
+        {% endif %}    
         <p class="lead">{{ post.body|safe }}</p>
     </section>
 
