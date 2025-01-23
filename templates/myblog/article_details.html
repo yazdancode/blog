@@ -87,7 +87,9 @@
     <div class="row no-gutters">
         <div class="col-md-2">
 {% if post.author.profile.profile_pic%}            
-            <img src="{{ post.author.profile.profile_pic.url }}" alt="عکس پروفایل {{ post.author.first_name }}" class="card-img">
+    <img src="{{ post.author.profile.profile_pic.url }}" alt="عکس پروفایل {{ post.author.first_name }}" class="card-img">
+{% else%}
+    <img src="{% static 'myblog/static/img/Default-Profile-Picture-Download-PNG-Image.peng'%}" alt="عکس پروفایل {{ post.author.first_name }}" class="card-img">
 {% endif %}            
         </div>
         <div class="col-md-10">
