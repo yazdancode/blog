@@ -6,12 +6,11 @@
 <link rel="stylesheet" href="{% static 'myblog/css/style.css' %}">
 <article class="post-detail">
     <header class="mb-4">
-        <p>Current user: {{ user.id }} <br>
-        Post author: {{ post.author.id }}</p>
-        <h1 class="display-4">{{ post.title }}!</h1>
+        <p>کاربر فعلی: {{ user.id }} <br> نویسنده پست: {{ post.author.id }}</p>
+        <h1 class="display-4">{{ post.title }}</h1>
         <small class="post-meta text-muted d-block mb-2">
             نوشته شده توسط: {{ post.author.first_name }} {{ post.author.last_name }}
-            {{ post.post_date }}
+            در تاریخ: {{ post.post_date }}
             <small>
                 {% if user.is_authenticated %}
                     {% if user.id == post.author.id %}
@@ -28,7 +27,7 @@
 
     <section class="post-body mb-4">
         {% if post.header_image %}
-            <img src="{{  post.header_image.url }}" alt="#">
+            <img src="{{ post.header_image.url }}" alt="تصویر سر صفحه برای {{ post.title }}">
         {% endif %}    
         <p class="lead">{{ post.body|safe }}</p>
     </section>
@@ -39,29 +38,29 @@
         <hr>
         <br/>
 
-        <!-- Like Button Form -->
+        <!-- فرم لایک -->
         <form method="POST" action="{% url 'like' post.id %}">
             {% if user.is_authenticated %}
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary" {% if liked %}disabled{% endif %}>
-                    Like
+                <button type="submit" class="btn btn-primary" {% if liked %}disabled title="شما قبلاً این پست را لایک کرده‌اید"{% endif %}>
+                    لایک
                 </button>
                 <span>{{ total_likes }}</span>
             {% endif %}
         </form>
 
-        <!-- Dislike Button Form -->
+        <!-- فرم دیس‌لایک -->
         <form method="POST" action="{% url 'dislike' post.id %}">
             {% if user.is_authenticated %}
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger" {% if disliked %}disabled{% endif %}>
-                    Dislike
+                <button type="submit" class="btn btn-danger" {% if disliked %}disabled title="شما قبلاً این پست را دیس‌لایک کرده‌اید"{% endif %}>
+                    دیس‌لایک
                 </button>
                 <span>{{ total_dislikes }}</span>
             {% endif %}
         </form>
 
-        <!-- Share Button Form -->
+        <!-- فرم اشتراک‌گذاری -->
         <form method="POST" action="{% url 'share-post' post.id %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-warning">
@@ -74,10 +73,63 @@
         </form>
 
         {% if not user.is_authenticated %}
-            <small><a class="nav-link" href="{% url 'login' %}">login</a></small>
+            <small><a class="nav-link" href="{% url 'login' %}">ورود به سیستم</a></small>
         {% endif %}
 
         <script src="{% static 'myblog/js/main.js' %}"></script>
     </footer>
 </article>
+
+<br/><br/>
+
+<div class="card mb-3">
+    {% if post.author.profile.profile_pic %}
+    <div class="row no-gutters">
+        <div class="col-md-2">
+            <img src="{{ post.author.profile.profile_pic.url }}" alt="عکس پروفایل {{ post.author.first_name }}" class="card-img">
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ post.author.first_name }} {{ post.author.last_name }}
+                </h5>
+                <p class="small text-muted">
+                    {% if post.author.profile.website_url %}
+                        <a href="{{ post.author.profile.website_url }}" target="_blank" title="مشاهده وب‌سایت">
+                            <i class="bi bi-globe2"></i>
+                        </a> |
+                    {% endif %}
+                    {% if post.author.profile.facebook_url %}
+                        <a href="{{ post.author.profile.facebook_url }}" target="_blank" title="مشاهده فیسبوک">
+                            <i class="bi bi-facebook"></i>
+                        </a> |
+                    {% endif %}
+                    {% if post.author.profile.twitter_url %}
+                        <a href="{{ post.author.profile.twitter_url }}" target="_blank" title="مشاهده توییتر">
+                            <i class="bi bi-twitter"></i>
+                        </a> |
+                    {% endif %}
+                    {% if post.author.profile.instagram_url %}
+                        <a href="{{ post.author.profile.instagram_url }}" target="_blank" title="مشاهده اینستاگرام">
+                            <i class="bi bi-instagram"></i>
+                        </a> |
+                    {% endif %}
+                    {% if post.author.profile.pinterest_url %}
+                        <a href="{{ post.author.profile.pinterest_url }}" target="_blank" title="مشاهده پینترست">
+                            <i class="bi bi-pinterest"></i>
+                        </a>
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    {% if post.author.profile.bio %}
+                        {{ post.author.profile.bio }}
+                    {% else %}
+                        این کاربر هنوز توضیحاتی ارائه نکرده است.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

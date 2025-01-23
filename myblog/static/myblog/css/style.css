@@ -89,6 +89,35 @@ button{
     font-weight: bold;
 }
 
+.circle {
+    width: 150px;
+    height: 150px;
+    background-color: black;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.plus {
+    position: relative;
+    width: 60px;
+    height: 10px;
+    background-color: white;
+}
+
+.plus::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 60px;
+    background-color: white;
+    top: -25px;
+    left: 25px;
+}
+
+
 /* Responsive design */
 @media (max-width: 768px) {
     .post-detail {
@@ -104,3 +133,4 @@ button{
         gap: 0.5rem;
     }
 }
+

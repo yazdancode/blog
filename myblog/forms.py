@@ -9,6 +9,9 @@ from .models import Category, Post
 # کلید حافظه پنهان برای دسته‌بندی‌ها
 CATEGORIES_CACHE_KEY = "categories"
 
+choices = Category.objects.all().values_list("name", "name")
+choices_author = Post.objects.all().values_list("author", "author")
+
 
 # تابع کمکی برای تنظیم استایل ویجت‌ها
 def form_widget_attrs(base_attrs=None, **styles):
@@ -27,6 +30,8 @@ def validate_persian_text(text, field_name, min_length=None, max_length=None):
     """
     متن فارسی را اعتبارسنجی می‌کند.
     """
+    text = text.strip()  # حذف فاصله‌های اضافی
+
     if min_length and len(text) < min_length:
         raise forms.ValidationError(
             f"{field_name} باید حداقل {min_length} کاراکتر باشد."
@@ -35,7 +40,10 @@ def validate_persian_text(text, field_name, min_length=None, max_length=None):
         raise forms.ValidationError(
             f"{field_name} نباید بیش از {max_length} کاراکتر باشد."
         )
-    if not re.match(r"^[\u0600-\u06FF\s]+$", text):
+    # الگوی regex برای حروف فارسی، اعداد فارسی، و نیم‌فاصله
+    if not re.match(
+        r"^[\u0600-\u06FF\uFB8A\u067E\u0686\u06AF\u06F0-\u06F9\u200C\s]+$", text
+    ):
         raise forms.ValidationError(f"{field_name} باید فقط شامل حروف فارسی باشد.")
     return text
 
@@ -87,18 +95,13 @@ class PostForm(forms.ModelForm):
                     font_weight="600",
                 )
             ),
-            "author": forms.TextInput(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "نویسنده را اینجا وارد کنید",
-                    },
-                    color="#303b51",
-                    font_size="16px",
-                    font_weight="600",
-                )
+            "author": forms.Select(
+                choices=choices_author,
+                attrs={
+                    "class": "form-control",
+                },
             ),
-            "category": forms.Select(attrs={"class": "form-control"}),
+            "category": forms.Select(choices=choices, attrs={"class": "form-control"}),
             "body": forms.Textarea(
                 attrs=form_widget_attrs(
                     {
@@ -147,12 +150,14 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError("این عنوان قبلاً ثبت شده است.")
         return title
 
-    def clean_title_tag(self):
-        """
-        اعتبارسنجی برچسب عنوان
-        """
-        title_tag = self.cleaned_data.get("title_tag")
-        return validate_persian_text(title_tag, "برچسب عنوان", max_length=50)
+    # def clean_title_tag(self):
+    #      title_tag = self.cleaned_data.get("title_tag", "").strip()
+
+    #      if not title_tag or title_tag == self.instance.title_tag:
+    #           return title_tag
+
+    #      # اعمال اعتبارسنجی فقط در صورت نیاز
+    #      return validate_persian_text(title_tag, "برچسب عنوان", max_length=50)
 
     def clean_body(self):
         """
@@ -222,21 +227,3 @@ class ShareForm(forms.Form):
         required=False,
         label="کاربرانی که به آن‌ها پیام ارسال شود",
     )
-
-
-# class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model = Comment
-#         fields = ['post', 'comment']
-#         widgets = {
-#             'comment': forms.Textarea(attrs={'placeholder': 'نظر خود را وارد کنید', 'rows': 4, 'cols': 50}),
-#         }
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields['post'].widget = forms.HiddenInput()
-#
-#     def clean_comment(self):
-#         comment = self.cleaned_data.get('comment')
-#         if len(comment) < 5:
-#             raise forms.ValidationError("نظر باید حداقل ۵ کاراکتر باشد.")
-#         return comment

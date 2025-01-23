@@ -66,10 +66,14 @@ class AddPostView(BaseView, BaseForm, CreateView):
 class AddCategoryView(CreateView):
     model = Category
     template_name = "myblog/add_category.html"
-    fields = "__all__"
+    fields = ["name", "slug"]
 
     def get_success_url(self):
         return reverse_lazy("home")
+
+    # def form_valid(self, form):
+    #     print(form.cleaned_data)
+    #     return super().form_valid(form)
 
 
 class UpdatePostView(BaseView, UpdateView):
