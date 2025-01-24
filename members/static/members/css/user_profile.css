@@ -1,0 +1,29 @@
+/* استایل برای بخش پروفایل کاربر */
+#userProfile {
+    border: 2px solid #007bff;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+}
+
+#userProfile p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+#userProfile span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* استایل برای نمایش JSON */
+#jsonOutput {
+    margin-top: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    font-family: monospace;
+    overflow: auto;
+}

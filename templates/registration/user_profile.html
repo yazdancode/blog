@@ -1,11 +1,21 @@
-{% extends 'base.html' %}{% block content %}
-
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
+<h1>پروفایل کاربر</h1>
 
+<div id="userProfile">
+    <p>نام: <span id="userName">{{ page_user.first_name }} {{ page_user.last_name }}</span></p>
+    <p>ایمیل: <span id="userEmail">{{ page_user.email }}</span></p>
+    <p>توضیحات: <span id="userBio">{{ page_user.profile.bio }}</span></p>
+</div>
 
-<h1>User Profile...</h1>
+<h2>داده‌های JSON کاربر:</h2>
+<pre id="jsonOutput">
+    
+</pre>
 
-{{ page_user }}
-
+<!-- این فایل CSS و جاوااسکریپت مربوطه را اضافه می‌کند -->
+<link rel="stylesheet" href="{% static 'members/css/user_profile.css' %}">
+<script src="{% static 'members/js/user_profile.js' %}"></script>
 {% endblock %}
