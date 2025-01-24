@@ -1,29 +1,45 @@
-/* استایل برای بخش پروفایل کاربر */
-#userProfile {
-    border: 2px solid #007bff;
-    padding: 20px;
+/* استایل کارت پروفایل */
+.card {
+    border: 1px solid #ccc;
     border-radius: 10px;
-    background-color: #f9f9f9;
-    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#userProfile p {
-    margin: 10px 0;
-    font-size: 18px;
+.card-img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 10px auto;
 }
 
-#userProfile span {
-    font-weight: bold;
-    color: #333;
-}
-
-/* استایل برای نمایش JSON */
-#jsonOutput {
-    margin-top: 20px;
-    background-color: #333;
-    color: #fff;
+.card-body {
     padding: 15px;
-    border-radius: 10px;
-    font-family: monospace;
-    overflow: auto;
+}
+
+.card-title {
+    font-size: 20px;
+    color: #007bff;
+}
+
+.card-text {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* لینک‌های شبکه‌های اجتماعی */
+.bi {
+    margin-right: 5px;
+    color: #007bff;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #0056b3;
 }

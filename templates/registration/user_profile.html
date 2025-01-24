@@ -7,15 +7,48 @@
 <div id="userProfile">
     <p>نام: <span id="userName">{{ page_user.first_name }} {{ page_user.last_name }}</span></p>
     <p>ایمیل: <span id="userEmail">{{ page_user.email }}</span></p>
-    <p>توضیحات: <span id="userBio">{{ page_user.profile.bio }}</span></p>
+    <p>توضیحات: <span id="userBio">{{ page_user.profile.bio|default:"توضیحاتی ثبت نشده است." }}</span></p>
+</div>
+
+<div class="card mb-3">
+    {% if page_user.profile.profile_pic %}
+    <div class="row no-gutters">
+        <div class="col-md-2">
+            <img src="{{ page_user.profile.profile_pic.url }}" alt="عکس پروفایل" class="card-img">
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">{{ page_user.first_name }} {{ page_user.last_name }}</h5>
+                <p class="small text-muted">
+                    {% if page_user.profile.website_url %}
+                        <a href="{{ page_user.profile.website_url }}" target="_blank">🌐 وب‌سایت</a> |
+                    {% endif %}
+                    {% if page_user.profile.facebook_url %}
+                        <a href="{{ page_user.profile.facebook_url }}" target="_blank">📘 فیسبوک</a> |
+                    {% endif %}
+                    {% if page_user.profile.twitter_url %}
+                        <a href="{{ page_user.profile.twitter_url }}" target="_blank">🐦 توییتر</a> |
+                    {% endif %}
+                    {% if page_user.profile.instagram_url %}
+                        <a href="{{ page_user.profile.instagram_url }}" target="_blank">📷 اینستاگرام</a>
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    {{ page_user.profile.bio|default:"توضیحاتی ثبت نشده است." }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <p>عکس پروفایل ثبت نشده است.</p>
+    {% endif %}
 </div>
 
 <h2>داده‌های JSON کاربر:</h2>
-<pre id="jsonOutput">
-    
-</pre>
+<pre id="jsonOutput"></pre>
 
-<!-- این فایل CSS و جاوااسکریپت مربوطه را اضافه می‌کند -->
+<!-- لینک به فایل‌های استاتیک -->
 <link rel="stylesheet" href="{% static 'members/css/user_profile.css' %}">
 <script src="{% static 'members/js/user_profile.js' %}"></script>
+
 {% endblock %}
