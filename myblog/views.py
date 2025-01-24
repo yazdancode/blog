@@ -104,7 +104,7 @@ class CategoryListView(View):
 
 
 class LikeView(LoginRequiredMixin, View):
-    login_url = "/login/"  
+    login_url = "/login/"
 
     @staticmethod
     def post(request, pk, *args, **kwargs):

@@ -1,12 +1,12 @@
 from django.contrib.auth import login
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import DetailView
 from django.views.generic import TemplateView
 from django.contrib.auth.views import PasswordChangeView
-
 from .forms import EditProfileForm, SignUpForm, PasswordChangingForm
-
+from myblog.models import Profile
 
 # ویو برای تغییر رمز عبور
 class PasswordsChangeView(PasswordChangeView):
@@ -44,3 +44,16 @@ class UserEditeView(UpdateView):
 
 class PasswordSuccessView(TemplateView):
     template_name = "registration/password_sucess.html"
+
+
+class ShowProfilePageView(DetailView):
+    model = Profile
+    template_name = "regisration/user_profile.html"
+
+    def get_context_data(self, **kwargs):
+        users = Profile.objects.all()
+        context = super(ShowProfilePageView, self).get_context_data(**kwargs)
+
+        page_user = get_object_or_404(Profile, id=self.kwargs["pk"])
+        context["page_user"] = page_user
+        return context

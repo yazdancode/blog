@@ -6,6 +6,7 @@ from .views import (
     UserRegisterView,
     PasswordsChangeView,
     PasswordSuccessView,
+    ShowProfilePageView,
 )
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("password/", PasswordsChangeView.as_view(), name="password_change"),
     path("password_sucess/", PasswordSuccessView.as_view(), name="password_sucess"),
+    path("<int:pk>/profile/", ShowProfilePageView.as_view(), name="show_profile_page"),
 ]
