@@ -71,10 +71,6 @@ class AddCategoryView(CreateView):
     def get_success_url(self):
         return reverse_lazy("home")
 
-    # def form_valid(self, form):
-    #     print(form.cleaned_data)
-    #     return super().form_valid(form)
-
 
 class UpdatePostView(BaseView, UpdateView):
     template_name = "myblog/update_post.html"
@@ -108,7 +104,7 @@ class CategoryListView(View):
 
 
 class LikeView(LoginRequiredMixin, View):
-    login_url = "/login/"  # Optional: Redirect to login page if not authenticated
+    login_url = "/login/"  
 
     @staticmethod
     def post(request, pk, *args, **kwargs):
@@ -121,7 +117,7 @@ class LikeView(LoginRequiredMixin, View):
 
 
 class DislikeView(LoginRequiredMixin, View):
-    login_url = "/login/"  # Optional: Redirect to login page if not authenticated
+    login_url = "/login/"
 
     @staticmethod
     def post(request, pk, *args, **kwargs):
