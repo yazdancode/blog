@@ -1,25 +1,26 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Create a New Blog Category{% endblock %}
+{% block title %} Crear Post {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'myblog/css/category-form.css' %}">
 
-    <div class="category-form-container">
-        {% if user.is_authenticated %}
-            <h1>Add Category</h1>
-            <div class="form-label">
-                <form method="POST" action="" class="form-group">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-secondary">Add Category</button>
-                </form>
-            </div>
-        {% else %}
-            <p class="unauthorized-message">You are not allowed here! (and you know it...)</p>
-        {% endif %}
+{% if user.is_authenticated %}
+    <h1> Agregar Post </h1>
+    <br/><br/>
+    <div class="form-group">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media}}
+            {{ form.as_p}}
+        <button class="btn btn-secondary">Post</button>
     </div>
+    <br/><br/>
+    
+    <script>
+        const name = "{{ user.id }}";
+        document.getElementById("user").value = name;
+    </script>
+{% else %}
+    You are not logged in.
+{% endif %}
 
-    <script src="{% static 'myblog/js/category-form.js' %}"></script>
 {% endblock %}

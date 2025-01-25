@@ -61,6 +61,16 @@ class BaseUserForm(forms.ModelForm):
         ),
     )
 
+    image = forms.ImageField(  # اصلاح نام فیلد به 'image' از 'images'
+        required=False,
+        widget=forms.ClearableFileInput(
+            attrs={
+                "class": "form-control",
+                "accept": "image/*",  # این ویژگی برای فیلد تصویر اضافه شده است
+            }
+        ),
+    )
+
     class Meta:
         model = User
         fields = ("username", "first_name", "last_name", "email", "gender", "age")

@@ -1,26 +1,24 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Delete Blog Post{% endblock %}
+{% block title %} Borrar Post {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'myblog/css/delete-post.css' %}">
 
-    <div class="delete-container">
-        {% if user.is_authenticated %}
-            <h1>Delete Post</h1>
-            <h3>Delete: {{ post.title }}</h3>
-            <div class="form-label">
-                <form method="POST" action="" class="form-group">
-                    {% csrf_token %}
-                    <strong>Are you sure?</strong>
-                    <button type="submit" class="btn btn-secondary">Delete</button>
-                </form>
-            </div>
-        {% else %}
-            <p class="unauthorized-message">You are not authorized to delete posts.</p>
-        {% endif %}
-    </div>
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <h1> Borrar Post </h1>
+        <br/><br/>
+        <h3>Borrar: {{ post.title }} </h3>
+        <br/>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+            <strong> Esta acción es irreversible </strong><br/>
+            <br/>
+            <button class="btn btn-secondary">Borrar Post!</button>
+        </div>
+    {% endif %}
+{% else %}
+    You are not logged in.
+{% endif %}
 
-    <script src="{% static 'myblog/js/delete-post.js' %}"></script>
 {% endblock %}

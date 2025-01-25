@@ -1,34 +1,66 @@
 {% extends 'base.html' %}
-{% block title %}{{ post.title_tag }}{% endblock %}
+{% block title %} {{ post.title_tag }} {% endblock %}
 
 {% block content %}
-<article class="post-detail">
-    <header class="mb-4">
-<!--         current user: {{ user.id }} <br>
-        post auther: {{ post.author.id }} -->
-        <h1 class="display-4">{{ post.title }}!</h1>
-        <small class="post-meta text-muted d-block mb-2">
-            نوشته شده توسط: {{ post.author.first_name }} {{ post.author.last_name }} {{ post.post_date }}
-            <small>
-                {% if user.is_authenticated %}
-                {% if user.id == post.author.id %}
-                    <a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a>
-                    <a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a>
-                {% endif %}    
+    <h1> {{ post.title }} </h1>
+    <small> By:
+        {{ post.author.first_name }}
+        {{ post.author.last_name }} -
+        {{ post.post_date }}
+        {% if user.is_authenticated %}
+            {% if user.id == post.author.id %}
+                -<a href="{% url 'update_post' post.pk %}"> (Edit) </a>
+                <a href="{% url 'delete_post' post.pk %}"> (Delete) </a>
             {% endif %}
-            </small>
-            <br>
-            <time datetime="{{ post.created_at }}">{{ post.created_at|date:"j F Y, g:i a" }}</time>
-        </small>
-        <hr>
-    </header>
 
-    <section class="post-body mb-4">
-        <p class="lead">{{ post.body|safe }}</p>
-    </section>
+            <form action="{% url 'like_post' post.pk %}" method="POST">
+              {{ total_likes }} Likes    - {{total_comments}} Comentarios<br/> 
+                {% csrf_token %}
+                {% if liked %}
+                    <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm"> Unlike</button>
+                 {% else %}
+                    <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm"> Like</button>
+                {% endif %}
+            </form>
+        {% else %}
+            <small><a href="{% url 'login' %}">Login</a> to Like </small>
+        {% endif %}
+        
+        
+    </small>
+    <hr>
+    <br/>
+    {% if post.header_image %}
+        <img src="{{post.header_image.url}}">
+    {% endif %}
+    <br/><br/>
+    {{ post.body|safe }}
+    <br/><br/>
+    <hr>
+    <h2>Comentarios...</h2>
+    {% if not post.comments.all %}
+        - 0 Comentarios <a href="{% url 'add_comment' post.pk%}">Añadir uno </a>
+        <br/>
+    {% else %}
+    
+    <a href="{% url 'add_comment' post.pk%}">Añadir comentario </a>
+    <br/>
+    {%for comment in post.comments.all %}
+        <strong> {{comment.email}} - 
+        {{comment.date_added}} -
+        </strong>
 
-    <footer>
-        <a href="{% url 'home' %}" class="btn btn-secondary">بازگشت به خانه</a>
-    </footer>
-</article>
+        <br/>
+        {{comment.body}}
+        <br/>
+    {%endfor%}
+    {%endif%}
+
+    <br/>
+    <a href = "{% url 'home' %}" class="btn btn-secondary" role="button"> Back </a>
+    <br/><br/>
+    <hr>
+    <br/>
+    
+
 {% endblock %}

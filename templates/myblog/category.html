@@ -1,57 +1,41 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}دسته بندی ها{% endblock %}
-
 {% block content %}
-    <link rel="stylesheet" href="{% static 'myblog/css/category-view.css' %}">
 
-    <div class="category-container">
-        {% if category %}
-            <div class="category-header">
-                <h1>{{ category.name }} دسته بندی</h1>
-            </div>
-
-            {% if posts %}
-                <ul>
-                    {% for post in posts %}
-                        <li class="list-group-item">
-                            <article class="post-item">
-                                <header>
-                                    <h2>
-                                        <a href="{% url 'article-detail' post.pk %}">
-                                            {{ post.title }}
-                                        </a>
-                                    </h2>
-                                </header>
-                                <p class="post-author">
-                                    نوشته شده توسط {{ post.author.first_name }} {{ post.author.last_name }}
-                                    {{ post.post_date }}
-                                    {% if user.is_authenticated %}
-                                        - <small><a href="{% url 'update_post' post.pk %}" class="text-primary">(ویرایش)</a></small> -
-                                        <small><a href="{% url 'delete_post' post.pk %}" class="text-primary">(حذف)</a></small>
-                                    {% endif %}
-                                    - <a href="mailto:{{ post.author.email }}" class="text-secondary">{{ post.author.email }}</a>
-                                </p>
-                                <div class="post-body">
-                                    {{ post.body|safe }}
-                                </div>
-                            </article>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <div class="empty-state">
-                    <p>هیچ پستی در این دسته‌بندی موجود نیست.</p>
-                </div>
+{% if category_posts %}
+    <ul>
+        <h1> {{ cats }} </h1>
+        <br/>
+        {% for post in category_posts %}
+        <div class="card">
+        <h5 class="card-header"><a href = "{% url 'article-detail' post.pk %}"> {{ post.title }}  </a></h5>
+            {% if post.header_image %}
+                <img class="card-img-top" src="{{post.header_image.url}}" alt='Post header'>
+                <br/>
             {% endif %}
-        {% else %}
-            <div class="empty-state">
-                <h1>دسته‌بندی پیدا نشد.</h1>
-                <p>ممکن است این دسته‌بندی حذف شده یا نامعتبر باشد.</p>
+        
+            <div class="card-body">
+               - Categoría: <a href = "{% url 'category' post.category|slugify %}"> {{ post.category }} </a>
+               - Autor: {{ post.author.first_name }} {{ post.author.last_name }} - {{ post.post_date }}
+               - Comentarios: {{post.total_comments}}
+                {% if user.is_authenticated %}
+                    {% if user.id == post.author.id %}
+                        <a href="{% url 'update_post' post.pk %}"> (Edit) </a>
+                        <a href="{% url 'delete_post' post.pk %}"> (Delete) </a>
+                    {% endif %}
+                {% endif %}
+                </br> </br>
+                <h5>
+                    {{ post.body|slice:":300"|safe }}
+                </h5>
             </div>
-        {% endif %}
-    </div>
+            
+        </div>
+        <br/>
+        {% endfor%}
+    </ul>
+{% else %}
+<h2> This page does not exist... </h2>
+{% endif %}
 
-    <script src="{% static 'myblog/js/category-view.js' %}"></script>
+
 {% endblock %}

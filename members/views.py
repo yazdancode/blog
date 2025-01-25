@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from myblog.models import Profile
 
 from .forms import EditProfileForm, PasswordChangingForm, SignUpForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # ویو برای تغییر رمز عبور
@@ -73,3 +74,17 @@ class EditProfilePageView(UpdateView):
         "pinterest_url",
     ]
     success_url = reverse_lazy("home")
+
+
+class ProfileView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = "registration/profile.html"
+    context_object_name = "profile"
+
+    def get_object(self, queryset=None):
+        # بررسی اینکه پروفایل برای کاربر وجود دارد یا خیر
+        try:
+            profile = self.request.user.profile
+        except Profile.DoesNotExist:
+            profile = Profile.objects.create(user=self.request.user)
+        return profile

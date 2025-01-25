@@ -1,29 +1,28 @@
 from django.urls import path
-
-from myblog.views import (
-    AddCategoryView,
-    AddPostView,
-    ArticleDetailView,
-    CategoryListView,
-    CategoryView,
-    DeletePostView,
-    DislikeView,
+from .views import (
     HomeView,
-    LikeView,
-    ShareView,
+    ArticleDetailView,
+    AddPostView,
+    AddCategoryView,
     UpdatePostView,
+    DeletePostView,
+    CategoryView,
+    CategoryListView,
+    LikeView,
+    AddCommentView,
+    UserView,
 )
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("article/<int:pk>", ArticleDetailView.as_view(), name="article-detail"),
     path("add_post/", AddPostView.as_view(), name="add_post"),
-    path("article/edite/<int:pk>", UpdatePostView.as_view(), name="update_post"),
-    path("article/<int:pk>/delete", DeletePostView.as_view(), name="delete_post"),
+    path("article_edit/<int:pk>", UpdatePostView.as_view(), name="update_post"),
+    path("article/<int:pk>/remove", DeletePostView.as_view(), name="delete_post"),
     path("add_category/", AddCategoryView.as_view(), name="add_category"),
-    path("category-list/", CategoryListView.as_view(), name="category_list"),
-    path("category/<str:category_name>/", CategoryView.as_view(), name="category_view"),
-    path("like/<int:pk>", LikeView.as_view(), name="like"),
-    path("dislike/<int:pk>", DislikeView.as_view(), name="dislike"),
-    path("article/<int:pk>/share/", ShareView.as_view(), name="share-post"),
+    path("category/<str:cats>/", CategoryView.as_view(), name="category"),
+    path("user-posts/<int:pk>/", UserView, name="user_posts"),
+    path("category-list/", CategoryListView.as_view(), name="category-list"),
+    path("like/<int:pk>", LikeView.as_view(), name="like_post"),
+    path("article/<int:pk>/comment/", AddCommentView.as_view(), name="add_comment"),
 ]

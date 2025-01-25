@@ -1,48 +1,15 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Edit Profile{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'members/css/profile-edit.css' %}">
-{% endblock %}
+{% block title %} Edit Profile {% endblock %}
 
 {% block content %}
-<div class="profile-edit-container">
-    <div class="profile-edit-card">
-        <h1 class="profile-edit-title">Edit Profile</h1>
-        </br></br/>
-        {{ user.profile.bio  }}
-        </br></br>
-        <div class="profile-edit-form">
-            <form method="POST" action="" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="form-field">
-                    <label class="field-label">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.help_text %}
-                    <small class="help-text">{{ field.help_text }}</small>
-                    {% endif %}
-                    {% if field.errors %}
-                    <div class="field-errors">
-                        {% for error in field.errors %}
-                        <span class="error-message">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                {% endfor %}
-                <div class="form-actions">
-                    <button type="submit" class="update-button">Update Profile</button>
-                    <a href="{% url 'home'%}" class="cancel-button">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-{% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'members/js/profile-edit.js' %}"></script>
+<h1> Profile </h1>
+<br/><br/>
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p}}
+    <button class="btn btn-secondary">Update Profile</button>
+</div>
+<br/><br/>
 {% endblock %}

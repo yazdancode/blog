@@ -8,6 +8,7 @@ from .views import (
     ShowProfilePageView,
     UserEditeView,
     UserRegisterView,
+    ProfileView,
 )
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
         EditProfilePageView.as_view(),
         name="edit_profile_page",
     ),
+    path("profile/", ProfileView.as_view(), name="profile"),
 ]

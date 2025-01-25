@@ -218,12 +218,3 @@ class UpdateForm(forms.ModelForm):
                 )
             ),
         }
-
-
-class ShareForm(forms.Form):
-    users = forms.ModelMultipleChoiceField(
-        queryset=User.objects.filter(is_active=True),  # فقط کاربران فعال
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="کاربرانی که به آن‌ها پیام ارسال شود",
-    )
