@@ -1,9 +1,9 @@
 import jdatetime
 from django import forms
 from django.contrib.auth.forms import (
+    PasswordChangeForm,
     UserChangeForm,
     UserCreationForm,
-    PasswordChangeForm,
 )
 from django.contrib.auth.models import User
 
