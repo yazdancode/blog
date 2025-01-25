@@ -7,6 +7,7 @@ from .views import (
     PasswordsChangeView,
     PasswordSuccessView,
     ShowProfilePageView,
+    EditProfilePageView
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path("password/", PasswordsChangeView.as_view(), name="password_change"),
     path("password_sucess/", PasswordSuccessView.as_view(), name="password_sucess"),
     path("<int:pk>/profile/", ShowProfilePageView.as_view(), name="show_profile_page"),
+    path("<int:pk>/edit_profile_page/", EditProfilePageView.as_view(), name="edit_profile_page"),
 ]
