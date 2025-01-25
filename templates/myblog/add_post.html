@@ -1,29 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create a New Blog Post{% endblock %}
+{% block title %}Create a New Profile Page{% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'myblog/css/post-form.css' %}">
 
     <div class="post-form-container">
         {% if user.is_authenticated %}
-            <h1>Add Post</h1>
+            <h1>Craate Profile Page...</h1>
             <div class="form-label">
                 <form method="POST" action="" class="form-group" enctype="multipart/for-data">
                     {% csrf_token %}
-                    {{ form.media }}
                     {{ form.as_p }}
-                    <button type="submit" class="btn btn-secondary">Post</button>
+                    <button type="submit" class="btn btn-secondary">Create Profile Page </button>
                 </form>
             </div>
         {% else %}
             <p class="unauthorized-message">You are not allowed here! (and you know it...)</p>
         {% endif %}
     </div>
-
-    <script>
-        var name = "{{ user.id }}";
-    </script>
     <script src="{% static 'myblog/js/post-form.js' %}"></script>
 {% endblock %}

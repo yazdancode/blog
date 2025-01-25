@@ -1,220 +1,41 @@
-import re
-
 from django import forms
-from django.contrib.auth.models import User
-from django.core.cache import cache
+from .models import Post, Category, Comment
 
-from .models import Category, Post
-
-# کلید حافظه پنهان برای دسته‌بندی‌ها
-CATEGORIES_CACHE_KEY = "categories"
-
-choices = Category.objects.all().values_list("name", "name")
-choices_author = Post.objects.all().values_list("author", "author")
-
-
-# تابع کمکی برای تنظیم استایل ویجت‌ها
-def form_widget_attrs(base_attrs=None, **styles):
-    """
-    تنظیمات استایل ویجت را به صورت یکپارچه مدیریت می‌کند.
-    """
-    if base_attrs is None:
-        base_attrs = {}
-    style_string = "; ".join(f"{k}: {v}" for k, v in styles.items())
-    base_attrs["style"] = style_string
-    return base_attrs
-
-
-# توابع کمکی برای اعتبارسنجی متن فارسی
-def validate_persian_text(text, field_name, min_length=None, max_length=None):
-    """
-    متن فارسی را اعتبارسنجی می‌کند.
-    """
-    text = text.strip()  # حذف فاصله‌های اضافی
-
-    if min_length and len(text) < min_length:
-        raise forms.ValidationError(
-            f"{field_name} باید حداقل {min_length} کاراکتر باشد."
-        )
-    if max_length and len(text) > max_length:
-        raise forms.ValidationError(
-            f"{field_name} نباید بیش از {max_length} کاراکتر باشد."
-        )
-    # الگوی regex برای حروف فارسی، اعداد فارسی، و نیم‌فاصله
-    if not re.match(
-        r"^[\u0600-\u06FF\uFB8A\u067E\u0686\u06AF\u06F0-\u06F9\u200C\s]+$", text
-    ):
-        raise forms.ValidationError(f"{field_name} باید فقط شامل حروف فارسی باشد.")
-    return text
-
-
-def validate_no_special_chars(text, field_name):
-    """
-    بررسی می‌کند که متن شامل کاراکترهای خاص نباشد.
-    """
-    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", text):
-        raise forms.ValidationError(f"{field_name} نباید شامل کاراکترهای خاص باشد.")
-    return text
+choices = Category.objects.all().values_list('name', 'name')
 
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = (
-            "title",
-            "title_tag",
-            "author",
-            "category",
-            "body",
-            "snippet",
-            "header_image",
-        )
+        fields = ('title', 'title_tag', 'author', 'category', "header_image", 'body')
+
         widgets = {
-            "title": forms.TextInput(
-                attrs=form_widget_attrs(
-                    {"class": "form-control"},
-                    color="#1a202c",
-                    font_size="16px",
-                    font_weight="600",
-                    margin_bottom="2rem",
-                    padding_bottom="10px",
-                    border_bottom="2px solid #e2e8f0",
-                )
-            ),
-            "title_tag": forms.TextInput(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "برچسب عنوان را اینجا وارد کنید",
-                        "value": "",
-                        "id": "elder",
-                        "type": "hidden",
-                    },
-                    color="#303b51",
-                    font_size="16px",
-                    font_weight="600",
-                )
-            ),
-            "author": forms.Select(
-                choices=choices_author,
-                attrs={
-                    "class": "form-control",
-                },
-            ),
-            "category": forms.Select(choices=choices, attrs={"class": "form-control"}),
-            "body": forms.Textarea(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "متن پست را اینجا وارد کنید",
-                    },
-                    color="#1a202c",
-                    font_size="14px",
-                    font_weight="400",
-                    line_height="1.5",
-                    padding="10px",
-                )
-            ),
-            "snippet": forms.Textarea(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "خلاصه پست را اینجا وارد کنید",
-                    },
-                    color="#1a202c",
-                    font_size="14px",
-                    font_weight="400",
-                    line_height="1.5",
-                    padding="10px",
-                )
-            ),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'title_tag': forms.TextInput(attrs={'class': 'form-control'}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id': 'user', 'type': 'hidden'}),
+            'category': forms.Select(choices=choices, attrs={'class': 'form-control'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # کش کردن دسته‌بندی‌ها به صورت lazy
-        categories = cache.get(CATEGORIES_CACHE_KEY)
-        if not categories:
-            categories = list(Category.objects.all().values_list("name", "name"))
-            cache.set(CATEGORIES_CACHE_KEY, categories, 3600)  # ذخیره برای 1 ساعت
-        self.fields["category"].choices = categories
 
-    def clean_title(self):
-        """
-        اعتبارسنجی عنوان
-        """
-        title = self.cleaned_data.get("title")
-        title = validate_persian_text(title, "عنوان", min_length=5)
-        title = validate_no_special_chars(title, "عنوان")
-        if Post.objects.filter(title=title).exists():
-            raise forms.ValidationError("این عنوان قبلاً ثبت شده است.")
-        return title
-
-    # def clean_title_tag(self):
-    #      title_tag = self.cleaned_data.get("title_tag", "").strip()
-
-    #      if not title_tag or title_tag == self.instance.title_tag:
-    #           return title_tag
-
-    #      # اعمال اعتبارسنجی فقط در صورت نیاز
-    #      return validate_persian_text(title_tag, "برچسب عنوان", max_length=50)
-
-    def clean_body(self):
-        """
-        اعتبارسنجی متن پست
-        """
-        body = self.cleaned_data.get("body")
-        banned_words = ["نامناسب", "غیرمجاز", "کلمه‌بد"]
-        if any(word in body for word in banned_words):
-            raise forms.ValidationError("متن پست نباید شامل کلمات نامناسب باشد.")
-        body = validate_persian_text(body, "متن پست", min_length=10, max_length=500)
-        if not body.strip():
-            raise forms.ValidationError("متن پست نمی‌تواند فقط شامل فاصله باشد.")
-        return body
-
-
-class UpdateForm(forms.ModelForm):
+class EditForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "title_tag", "body", "snippet")
+        fields = ('title', 'title_tag', 'body')
+
         widgets = {
-            "title": forms.TextInput(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "عنوان را اینجا وارد کنید",
-                    },
-                    color="#1a202c",
-                    font_size="16px",
-                    font_weight="600",
-                )
-            ),
-            "title_tag": forms.TextInput(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "برچسب عنوان را اینجا وارد کنید",
-                    },
-                    color="#303b51",
-                    font_size="14px",
-                )
-            ),
-            "body": forms.Textarea(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "متن پست را اینجا وارد کنید",
-                    },
-                    line_height="1.5",
-                )
-            ),
-            "snippet": forms.Textarea(
-                attrs=form_widget_attrs(
-                    {
-                        "class": "form-control",
-                        "placeholder": "متن پست را اینجا وارد کنید",
-                    },
-                    line_height="1.5",
-                )
-            ),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'title_tag': forms.TextInput(attrs={'class': 'form-control'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('email', 'body')
+
+        widgets = {
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
         }

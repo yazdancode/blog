@@ -88,3 +88,12 @@ class ProfileView(LoginRequiredMixin, DetailView):
         except Profile.DoesNotExist:
             profile = Profile.objects.create(user=self.request.user)
         return profile
+
+
+class CreateProfilePageView(CreateView):
+    model = Profile
+    template_name = "registration/create_profile_page.html"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

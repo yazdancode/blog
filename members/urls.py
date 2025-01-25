@@ -9,6 +9,7 @@ from .views import (
     UserEditeView,
     UserRegisterView,
     ProfileView,
+    CreateProfilePageView,
 )
 
 urlpatterns = [
@@ -24,4 +25,9 @@ urlpatterns = [
         name="edit_profile_page",
     ),
     path("profile/", ProfileView.as_view(), name="profile"),
+    path(
+        "create_profile_page/",
+        CreateProfilePageView.as_view(),
+        name="create_profile_page",
+    ),
 ]

@@ -5,6 +5,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    View
 )
 from .models import Post, Category, Comment
 from .forms import PostForm, EditForm, CommentForm

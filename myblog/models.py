@@ -68,4 +68,10 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    pass
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
+    email = models.CharField(max_length=255)
+    body = models.TextField(max_length=200)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s ' % (self.post.title, self.name)
