@@ -70,6 +70,6 @@ class EditProfilePageView(UpdateView):
         "website_url",
         "twitter_url",
         "instagram_url",
-        "pinteresst_url",
+        "pinterest_url",
     ]
     success_url = reverse_lazy("home")
